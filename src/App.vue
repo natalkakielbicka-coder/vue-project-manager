@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
+import ProjectFilters from './components/ProjectFilters.vue'
 import ProjectForm from './components/ProjectForm.vue'
 import ProjectCard from './components/ProjectCard.vue'
 
@@ -105,28 +106,13 @@ const statusCounts = computed(() => {
 
     <ProjectForm :project="editingProject" @save="saveProject" @cancel="cancelEdit" />
 
-    <div class="filters">
-      <input v-model="searchQuery" class="search" type="text" placeholder="Szukaj projektu..." />
-
-      <button
-        v-for="status in statuses"
-        :key="status"
-        :class="{ active: selectedStatus === status }"
-        @click="selectedStatus = status"
-      >
-        {{ status }}
-
-        <span class="filter-count">
-          {{ statusCounts[status] }}
-        </span>
-      </button>
-
-      <select v-model="sortBy" class="sort">
-        <option value="newest">Najnowsze</option>
-        <option value="oldest">Najstarsze</option>
-        <option value="name">Nazwa A–Z</option>
-      </select>
-    </div>
+    <ProjectFilters
+      v-model:searchQuery="searchQuery"
+      v-model:selectedStatus="selectedStatus"
+      v-model:sortBy="sortBy"
+      :statuses="statuses"
+      :statusCounts="statusCounts"
+    />
 
     <!-- <select v-model="selectedStatus" class="filters">
       <option
