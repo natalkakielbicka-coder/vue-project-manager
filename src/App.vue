@@ -1,12 +1,22 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 const projectName = ref('Moja pierwsza strona')
 const projectStatus = ref('Do zrobienia')
 const projectDescription = ref('')
 const errorMessage = ref('')
 
-const projects = ref([])
+const savedProjects = localStorage.getItem('projects')
+
+const projects = ref(savedProjects ? JSON.parse(savedProjects) : [])
+
+watch(
+  projects,
+  (newProjects) => {
+    localStorage.setItem('projects', JSON.stringify(newProjects))
+  },
+  { deep: true },
+)
 
 function addProject() {
   if (projectName.value.trim() === '') {
