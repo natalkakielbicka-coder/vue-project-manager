@@ -14,14 +14,32 @@ const statuses = ['Wszystkie', 'Do zrobienia', 'W trakcie', 'Gotowe']
 
 const searchQuery = ref('')
 
+const sortBy = ref('newest')
+
 const filteredProjects = computed(() => {
-  return projects.value.filter((project) => {
+  const filtered = projects.value.filter((project) => {
     const matchesStatus =
       selectedStatus.value === 'Wszystkie' || project.status === selectedStatus.value
 
     const matchesSearch = project.name.toLowerCase().includes(searchQuery.value.toLowerCase())
 
     return matchesStatus && matchesSearch
+  })
+
+  return [...filtered].sort((a, b) => {
+    if (sortBy.value === 'newest') {
+      return b.id - a.id
+    }
+
+    if (sortBy.value === 'oldest') {
+      return a.id - b.id
+    }
+
+    if (sortBy.value === 'name') {
+      return a.name.localeCompare(b.name, 'pl')
+    }
+
+    return 0
   })
 })
 
@@ -143,6 +161,12 @@ function cancelEdit() {
       >
         {{ status }}
       </button>
+
+      <select v-model="sortBy" class="sort">
+        <option value="newest">Najnowsze</option>
+        <option value="oldest">Najstarsze</option>
+        <option value="name">Nazwa A–Z</option>
+      </select>
     </div>
 
     <!-- <select v-model="selectedStatus" class="filters">
@@ -455,6 +479,13 @@ button:active {
   background: #ffffff;
   color: #6b7280;
   text-align: center;
+}
+
+.sort {
+  width: auto;
+  min-width: 150px;
+  padding: 10px 14px;
+  cursor: pointer;
 }
 
 /* MOBILE */
