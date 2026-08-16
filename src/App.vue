@@ -12,12 +12,17 @@ const selectedStatus = ref(savedStatus || 'Wszystkie')
 
 const statuses = ['Wszystkie', 'Do zrobienia', 'W trakcie', 'Gotowe']
 
-const filteredProjects = computed(() => {
-  if (selectedStatus.value === 'Wszystkie') {
-    return projects.value
-  }
+const searchQuery = ref('')
 
-  return projects.value.filter((project) => project.status === selectedStatus.value)
+const filteredProjects = computed(() => {
+  return projects.value.filter((project) => {
+    const matchesStatus =
+      selectedStatus.value === 'Wszystkie' || project.status === selectedStatus.value
+
+    const matchesSearch = project.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+
+    return matchesStatus && matchesSearch
+  })
 })
 
 const savedProjects = localStorage.getItem('projects')
@@ -128,6 +133,8 @@ function cancelEdit() {
     </div>
 
     <div class="filters">
+      <input v-model="searchQuery" class="search" type="text" placeholder="Szukaj projektu..." />
+
       <button
         v-for="status in statuses"
         :key="status"
@@ -148,7 +155,11 @@ function cancelEdit() {
       </option>
     </select> -->
 
-    <div class="projects">
+    <p v-if="filteredProjects.length === 0" class="empty-state">
+      Brak projektów spełniających kryteria.
+    </p>
+
+    <div v-else class="projects">
       <article v-for="project in filteredProjects" :key="project.id" class="project-card">
         <h2>{{ project.name }}</h2>
         <p>{{ project.status }}</p>
@@ -384,20 +395,32 @@ button:active {
 .filters {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
   margin-top: 40px;
 }
 
+.filters .search {
+  flex: 1 1 260px;
+  min-width: 220px;
+}
+
 .filters button {
   padding: 8px 14px;
+  flex: 0 0 auto;
+  border-radius: 10px;
   background: #ffffff;
   color: #4b5563;
   border: 1px solid #e5e7eb;
   font-size: 14px;
+  font-weight: 600;
+  box-shadow: none;
+  transform: none;
 }
 
 .filters button:hover {
   background: #f3f4f6;
+  color: #374151;
   box-shadow: none;
   transform: none;
 }
@@ -407,6 +430,33 @@ button:active {
   color: #ffffff;
   border-color: #4f46e5;
 }
+
+.filters button.active:hover {
+  background: #4338ca;
+  border-color: #4338ca;
+}
+
+.search {
+  padding: 11px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.search::placeholder {
+  color: #9ca3af;
+}
+
+.empty-state {
+  margin-top: 32px !important;
+  padding: 24px;
+  border: 1px dashed #d1d5db;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #6b7280;
+  text-align: center;
+}
+
 /* MOBILE */
 
 @media (max-width: 767px) {
@@ -417,6 +467,23 @@ button:active {
 
   .projects {
     grid-template-columns: 1fr;
+  }
+
+  .project-filters {
+    flex-direction: column;
+  }
+
+  .filters {
+    align-items: stretch;
+  }
+
+  .filters .search {
+    flex-basis: 100%;
+    width: 100%;
+  }
+
+  .filters button {
+    flex: 1 1 auto;
   }
 }
 </style>
