@@ -7,11 +7,23 @@ defineProps({
 })
 
 defineEmits(['edit', 'delete'])
+
+function formatDate(date) {
+  return new Date(date).toLocaleDateString('pl-PL')
+}
 </script>
 
 <template>
   <article class="project-card">
     <h2>{{ project.name }}</h2>
+
+    <p v-if="project.createdAt" class="project-date">
+      Utworzono: {{ formatDate(project.createdAt) }}
+    </p>
+
+    <p v-if="project.updatedAt" class="project-date">
+      Edytowano: {{ formatDate(project.updatedAt) }}
+    </p>
 
     <p
       class="project-status"
@@ -122,5 +134,11 @@ defineEmits(['edit', 'delete'])
 
 .delete-button:hover {
   background: #fecaca;
+}
+
+.project-date {
+  margin: -4px 0 14px;
+  font-size: 13px;
+  color: #9ca3af;
 }
 </style>

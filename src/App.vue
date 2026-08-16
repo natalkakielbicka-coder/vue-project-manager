@@ -66,11 +66,14 @@ function saveProject(projectData) {
     project.name = projectData.name
     project.status = projectData.status
     project.description = projectData.description
+    project.updatedAt = new Date().toISOString()
 
     editingProject.value = null
   } else {
     projects.value.push({
       id: Date.now(),
+      createdAt: new Date().toISOString(),
+      updatedAt: null,
       ...projectData,
     })
   }
