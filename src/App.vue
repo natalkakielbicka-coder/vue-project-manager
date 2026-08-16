@@ -3,6 +3,9 @@ import { ref, watch, computed } from 'vue'
 import ProjectFilters from './components/ProjectFilters.vue'
 import ProjectForm from './components/ProjectForm.vue'
 import ProjectCard from './components/ProjectCard.vue'
+import ConfirmModal from './components/ConfirmModal.vue'
+
+const projectToDeleteId = ref(null)
 
 const editingProject = ref(null)
 
@@ -80,7 +83,17 @@ function saveProject(projectData) {
 }
 
 function deleteProject(id) {
-  projects.value = projects.value.filter((project) => project.id !== id)
+  projectToDeleteId.value = id
+}
+
+function confirmDelete() {
+  projects.value = projects.value.filter((project) => project.id !== projectToDeleteId.value)
+
+  projectToDeleteId.value = null
+}
+
+function cancelDelete() {
+  projectToDeleteId.value = null
 }
 
 function editProject(project) {
@@ -140,6 +153,13 @@ const statusCounts = computed(() => {
         @delete="deleteProject"
       />
     </div>
+
+    <ConfirmModal
+      v-if="projectToDeleteId !== null"
+      message="Czy na pewno chcesz usunąć ten projekt?"
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
+    />
   </main>
 </template>
 
