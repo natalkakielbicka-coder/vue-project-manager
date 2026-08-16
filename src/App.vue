@@ -110,6 +110,15 @@ function cancelEdit() {
   projectDescription.value = ''
   errorMessage.value = ''
 }
+
+const statusCounts = computed(() => {
+  return {
+    Wszystkie: projects.value.length,
+    'Do zrobienia': projects.value.filter((project) => project.status === 'Do zrobienia').length,
+    'W trakcie': projects.value.filter((project) => project.status === 'W trakcie').length,
+    Gotowe: projects.value.filter((project) => project.status === 'Gotowe').length,
+  }
+})
 </script>
 
 <template>
@@ -160,6 +169,10 @@ function cancelEdit() {
         @click="selectedStatus = status"
       >
         {{ status }}
+
+        <span class="filter-count">
+          {{ statusCounts[status] }}
+        </span>
       </button>
 
       <select v-model="sortBy" class="sort">
@@ -510,6 +523,30 @@ button:active {
 .status-done {
   background: #dcfce7;
   color: #166534;
+}
+
+.filters button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.filters button.active .filter-count {
+  background: rgb(255 255 255 / 20%);
+  color: #ffffff;
 }
 
 /* MOBILE */
