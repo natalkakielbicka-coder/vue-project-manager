@@ -186,7 +186,18 @@ function cancelEdit() {
     <div v-else class="projects">
       <article v-for="project in filteredProjects" :key="project.id" class="project-card">
         <h2>{{ project.name }}</h2>
-        <p>{{ project.status }}</p>
+
+        <p
+          class="project-status"
+          :class="{
+            'status-todo': project.status === 'Do zrobienia',
+            'status-progress': project.status === 'W trakcie',
+            'status-done': project.status === 'Gotowe',
+          }"
+        >
+          {{ project.status }}
+        </p>
+
         <p>{{ project.description }}</p>
 
         <div class="project-actions">
@@ -359,18 +370,6 @@ button:active {
   color: #6b7280;
 }
 
-.project-card p:first-of-type {
-  display: inline-flex;
-  width: fit-content;
-  margin-bottom: 16px;
-  border-radius: 999px;
-  padding: 5px 10px;
-  background: #eef2ff;
-  color: #4f46e5;
-  font-size: 12px;
-  font-weight: 700;
-}
-
 .project-actions {
   display: flex;
   gap: 10px;
@@ -486,6 +485,31 @@ button:active {
   min-width: 150px;
   padding: 10px 14px;
   cursor: pointer;
+}
+
+.project-status {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 16px;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-todo {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.status-progress {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-done {
+  background: #dcfce7;
+  color: #166534;
 }
 
 /* MOBILE */
