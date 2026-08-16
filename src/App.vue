@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
+import ProjectCard from './components/ProjectCard.vue'
 
 const projectName = ref('Moja pierwsza strona')
 const projectStatus = ref('Do zrobienia')
@@ -197,28 +198,13 @@ const statusCounts = computed(() => {
     </p>
 
     <div v-else class="projects">
-      <article v-for="project in filteredProjects" :key="project.id" class="project-card">
-        <h2>{{ project.name }}</h2>
-
-        <p
-          class="project-status"
-          :class="{
-            'status-todo': project.status === 'Do zrobienia',
-            'status-progress': project.status === 'W trakcie',
-            'status-done': project.status === 'Gotowe',
-          }"
-        >
-          {{ project.status }}
-        </p>
-
-        <p>{{ project.description }}</p>
-
-        <div class="project-actions">
-          <button class="edit-button" @click="editProject(project)">Edytuj</button>
-
-          <button class="delete-button" @click="deleteProject(project.id)">Usuń</button>
-        </div>
-      </article>
+      <ProjectCard
+        v-for="project in filteredProjects"
+        :key="project.id"
+        :project="project"
+        @edit="editProject"
+        @delete="deleteProject"
+      />
     </div>
   </main>
 </template>
