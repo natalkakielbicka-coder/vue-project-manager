@@ -1,11 +1,24 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 
 const projectName = ref('Moja pierwsza strona')
 const projectStatus = ref('Do zrobienia')
 const projectDescription = ref('')
 const errorMessage = ref('')
 const editingId = ref(null)
+const savedStatus = localStorage.getItem('selectedStatus')
+
+const selectedStatus = ref(savedStatus || 'Wszystkie')
+
+const statuses = ['Wszystkie', 'Do zrobienia', 'W trakcie', 'Gotowe']
+
+const filteredProjects = computed(() => {
+  if (selectedStatus.value === 'Wszystkie') {
+    return projects.value
+  }
+
+  return projects.value.filter((project) => project.status === selectedStatus.value)
+})
 
 const savedProjects = localStorage.getItem('projects')
 
@@ -18,6 +31,10 @@ watch(
   },
   { deep: true },
 )
+
+watch(selectedStatus, (newStatus) => {
+  localStorage.setItem('selectedStatus', newStatus)
+})
 
 function addProject() {
   if (projectName.value.trim() === '') {
@@ -110,8 +127,29 @@ function cancelEdit() {
       <button v-if="editingId !== null" class="cancel-button" @click="cancelEdit">Anuluj</button>
     </div>
 
+    <div class="filters">
+      <button
+        v-for="status in statuses"
+        :key="status"
+        :class="{ active: selectedStatus === status }"
+        @click="selectedStatus = status"
+      >
+        {{ status }}
+      </button>
+    </div>
+
+    <!-- <select v-model="selectedStatus" class="filters">
+      <option
+        v-for="status in ['Wszystkie', 'Do zrobienia', 'W trakcie', 'Gotowe']"
+        :key="status"
+        :value="status"
+      >
+        {{ status }}
+      </option>
+    </select> -->
+
     <div class="projects">
-      <article v-for="project in projects" :key="project.id" class="project-card">
+      <article v-for="project in filteredProjects" :key="project.id" class="project-card">
         <h2>{{ project.name }}</h2>
         <p>{{ project.status }}</p>
         <p>{{ project.description }}</p>
@@ -341,6 +379,33 @@ button:active {
 .cancel-button:hover {
   background: #d1d5db;
   box-shadow: none;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 40px;
+}
+
+.filters button {
+  padding: 8px 14px;
+  background: #ffffff;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+.filters button:hover {
+  background: #f3f4f6;
+  box-shadow: none;
+  transform: none;
+}
+
+.filters button.active {
+  background: #4f46e5;
+  color: #ffffff;
+  border-color: #4f46e5;
 }
 /* MOBILE */
 
