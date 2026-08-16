@@ -5,6 +5,7 @@ const projectName = ref('Moja pierwsza strona')
 const projectStatus = ref('Do zrobienia')
 const projectDescription = ref('')
 const errorMessage = ref('')
+const editingId = ref(null)
 
 const savedProjects = localStorage.getItem('projects')
 
@@ -26,14 +27,24 @@ function addProject() {
 
   errorMessage.value = ''
 
-  const project = {
-    id: Date.now(),
-    name: projectName.value,
-    status: projectStatus.value,
-    description: projectDescription.value,
-  }
+  if (editingId.value !== null) {
+    const project = projects.value.find((project) => project.id === editingId.value)
 
-  projects.value.push(project)
+    project.name = projectName.value
+    project.status = projectStatus.value
+    project.description = projectDescription.value
+
+    editingId.value = null
+  } else {
+    const project = {
+      id: Date.now(),
+      name: projectName.value,
+      status: projectStatus.value,
+      description: projectDescription.value,
+    }
+
+    projects.value.push(project)
+  }
 
   projectName.value = ''
   projectStatus.value = 'Do zrobienia'
@@ -42,6 +53,14 @@ function addProject() {
 
 function deleteProject(id) {
   projects.value = projects.value.filter((project) => project.id !== id)
+}
+
+function editProject(project) {
+  editingId.value = project.id
+
+  projectName.value = project.name
+  projectStatus.value = project.status
+  projectDescription.value = project.description
 }
 </script>
 
@@ -75,7 +94,9 @@ function deleteProject(id) {
       <textarea id="project-description" v-model="projectDescription"></textarea>
     </div>
 
-    <button @click="addProject">Dodaj projekt</button>
+    <button @click="addProject">
+      {{ editingId !== null ? 'Zapisz zmiany' : 'Dodaj projekt' }}
+    </button>
 
     <div class="projects">
       <article v-for="project in projects" :key="project.id" class="project-card">
@@ -83,7 +104,11 @@ function deleteProject(id) {
         <p>{{ project.status }}</p>
         <p>{{ project.description }}</p>
 
-        <button @click="deleteProject(project.id)">Usuń</button>
+        <div class="project-actions">
+          <button class="edit-button" @click="editProject(project)">Edytuj</button>
+
+          <button class="delete-button" @click="deleteProject(project.id)">Usuń</button>
+        </div>
       </article>
     </div>
   </main>
@@ -261,22 +286,38 @@ button:active {
   font-weight: 700;
 }
 
-.project-card button {
-  margin-top: 10px;
-  padding: 9px 13px;
-  background: #fee2e2;
-  color: #b91c1c;
-  font-size: 13px;
+.project-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
 }
 
-.project-card button:hover {
-  background: #fecaca;
+.project-actions button {
+  margin-top: 0;
+}
+
+.edit-button {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.edit-button:hover {
+  background: #e0e7ff;
   box-shadow: none;
 }
 
+.delete-button {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.delete-button:hover {
+  background: #fecaca;
+  box-shadow: none;
+}
 /* MOBILE */
 
-@media (max-width: 650px) {
+@media (max-width: 767px) {
   .app {
     width: min(100% - 32px, 900px);
     padding: 40px 0;
