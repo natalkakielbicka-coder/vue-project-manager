@@ -33,3 +33,94 @@ defineEmits(['edit', 'delete'])
     </div>
   </article>
 </template>
+
+<style scoped>
+.project-card {
+  position: relative;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 4px 20px rgb(17 24 39 / 5%);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgb(17 24 39 / 10%);
+}
+
+.project-card h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  color: #111827;
+}
+
+.project-card p {
+  margin: 0 0 12px;
+  line-height: 1.6;
+  color: #6b7280;
+}
+
+.project-status {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 16px;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-todo {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.status-progress {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-done {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.project-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.project-actions button {
+  margin-top: 0;
+  border: 0;
+  border-radius: 10px;
+  padding: 9px 13px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.edit-button {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.edit-button:hover {
+  background: #e0e7ff;
+}
+
+.delete-button {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.delete-button:hover {
+  background: #fecaca;
+}
+</style>
