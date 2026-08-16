@@ -1,12 +1,10 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
+import ProjectForm from './components/ProjectForm.vue'
 import ProjectCard from './components/ProjectCard.vue'
 
-const projectName = ref('Moja pierwsza strona')
-const projectStatus = ref('Do zrobienia')
-const projectDescription = ref('')
-const errorMessage = ref('')
-const editingId = ref(null)
+const editingProject = ref(null)
+
 const savedStatus = localStorage.getItem('selectedStatus')
 
 const selectedStatus = ref(savedStatus || 'Wszystkie')
@@ -60,36 +58,21 @@ watch(selectedStatus, (newStatus) => {
   localStorage.setItem('selectedStatus', newStatus)
 })
 
-function addProject() {
-  if (projectName.value.trim() === '') {
-    errorMessage.value = 'Podaj nazwę projektu'
-    return
-  }
+function saveProject(projectData) {
+  if (editingProject.value) {
+    const project = projects.value.find((project) => project.id === editingProject.value.id)
 
-  errorMessage.value = ''
+    project.name = projectData.name
+    project.status = projectData.status
+    project.description = projectData.description
 
-  if (editingId.value !== null) {
-    const project = projects.value.find((project) => project.id === editingId.value)
-
-    project.name = projectName.value
-    project.status = projectStatus.value
-    project.description = projectDescription.value
-
-    editingId.value = null
+    editingProject.value = null
   } else {
-    const project = {
+    projects.value.push({
       id: Date.now(),
-      name: projectName.value,
-      status: projectStatus.value,
-      description: projectDescription.value,
-    }
-
-    projects.value.push(project)
+      ...projectData,
+    })
   }
-
-  projectName.value = ''
-  projectStatus.value = 'Do zrobienia'
-  projectDescription.value = ''
 }
 
 function deleteProject(id) {
@@ -97,19 +80,11 @@ function deleteProject(id) {
 }
 
 function editProject(project) {
-  editingId.value = project.id
-
-  projectName.value = project.name
-  projectStatus.value = project.status
-  projectDescription.value = project.description
+  editingProject.value = project
 }
 
 function cancelEdit() {
-  editingId.value = null
-  projectName.value = ''
-  projectStatus.value = 'Do zrobienia'
-  projectDescription.value = ''
-  errorMessage.value = ''
+  editingProject.value = null
 }
 
 const statusCounts = computed(() => {
@@ -128,37 +103,7 @@ const statusCounts = computed(() => {
 
     <p>Liczba projektów: {{ projects.length }}</p>
 
-    <div class="form-group">
-      <label for="project-name">Nazwa projektu</label>
-
-      <input id="project-name" v-model="projectName" type="text" />
-
-      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-    </div>
-
-    <div class="form-group">
-      <label for="project-status">Status</label>
-
-      <select id="project-status" v-model="projectStatus">
-        <option>Do zrobienia</option>
-        <option>W trakcie</option>
-        <option>Gotowe</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="project-description">Opis projektu</label>
-
-      <textarea id="project-description" v-model="projectDescription"></textarea>
-    </div>
-
-    <div class="form-actions">
-      <button @click="addProject">
-        {{ editingId !== null ? 'Zapisz zmiany' : 'Dodaj projekt' }}
-      </button>
-
-      <button v-if="editingId !== null" class="cancel-button" @click="cancelEdit">Anuluj</button>
-    </div>
+    <ProjectForm :project="editingProject" @save="saveProject" @cancel="cancelEdit" />
 
     <div class="filters">
       <input v-model="searchQuery" class="search" type="text" placeholder="Szukaj projektu..." />
