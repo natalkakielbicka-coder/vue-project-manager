@@ -1,17 +1,8 @@
 <script setup>
+const searchQuery = defineModel('searchQuery')
+const selectedStatus = defineModel('selectedStatus')
+const sortBy = defineModel('sortBy')
 defineProps({
-  searchQuery: {
-    type: String,
-    required: true,
-  },
-  selectedStatus: {
-    type: String,
-    required: true,
-  },
-  sortBy: {
-    type: String,
-    required: true,
-  },
   statuses: {
     type: Array,
     required: true,
@@ -27,19 +18,13 @@ const emit = defineEmits(['update:searchQuery', 'update:selectedStatus', 'update
 
 <template>
   <div class="filters">
-    <input
-      :value="searchQuery"
-      class="search"
-      type="text"
-      placeholder="Szukaj projektu..."
-      @input="emit('update:searchQuery', $event.target.value)"
-    />
+    <input v-model="searchQuery" class="search" type="text" placeholder="Szukaj projektu..." />
 
     <button
       v-for="status in statuses"
       :key="status"
       :class="{ active: selectedStatus === status }"
-      @click="emit('update:selectedStatus', status)"
+      @click="selectedStatus = status"
     >
       {{ status }}
 
@@ -48,7 +33,7 @@ const emit = defineEmits(['update:searchQuery', 'update:selectedStatus', 'update
       </span>
     </button>
 
-    <select :value="sortBy" class="sort" @change="emit('update:sortBy', $event.target.value)">
+    <select v-model="sortBy" class="sort">
       <option value="newest">Najnowsze</option>
       <option value="oldest">Najstarsze</option>
       <option value="name">Nazwa A–Z</option>
