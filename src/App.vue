@@ -62,6 +62,14 @@ function editProject(project) {
   projectStatus.value = project.status
   projectDescription.value = project.description
 }
+
+function cancelEdit() {
+  editingId.value = null
+  projectName.value = ''
+  projectStatus.value = 'Do zrobienia'
+  projectDescription.value = ''
+  errorMessage.value = ''
+}
 </script>
 
 <template>
@@ -94,9 +102,13 @@ function editProject(project) {
       <textarea id="project-description" v-model="projectDescription"></textarea>
     </div>
 
-    <button @click="addProject">
-      {{ editingId !== null ? 'Zapisz zmiany' : 'Dodaj projekt' }}
-    </button>
+    <div class="form-actions">
+      <button @click="addProject">
+        {{ editingId !== null ? 'Zapisz zmiany' : 'Dodaj projekt' }}
+      </button>
+
+      <button v-if="editingId !== null" class="cancel-button" @click="cancelEdit">Anuluj</button>
+    </div>
 
     <div class="projects">
       <article v-for="project in projects" :key="project.id" class="project-card">
@@ -313,6 +325,21 @@ button:active {
 
 .delete-button:hover {
   background: #fecaca;
+  box-shadow: none;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.cancel-button {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.cancel-button:hover {
+  background: #d1d5db;
   box-shadow: none;
 }
 /* MOBILE */
