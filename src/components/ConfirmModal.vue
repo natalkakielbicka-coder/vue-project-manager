@@ -10,7 +10,7 @@ defineEmits(['confirm', 'cancel'])
 </script>
 
 <template>
-  <div class="modal-backdrop">
+  <div class="modal-backdrop" @click.self="$emit('cancel')">
     <div class="modal">
       <h2>Usuń projekt</h2>
 

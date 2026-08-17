@@ -58,7 +58,7 @@ function cancelEdit() {
 </script>
 
 <template>
-  <div class="project-form">
+  <form class="project-form" @submit.prevent="submitForm">
     <div class="form-group">
       <label for="project-name">Nazwa projektu</label>
 
@@ -86,13 +86,13 @@ function cancelEdit() {
     </div>
 
     <div class="form-actions">
-      <button @click="submitForm">
+      <button type="submit">
         {{ project ? 'Zapisz zmiany' : 'Dodaj projekt' }}
       </button>
 
-      <button v-if="project" class="cancel-button" @click="cancelEdit">Anuluj</button>
+      <button v-if="project" type="button" class="cancel-button" @click="cancelEdit">Anuluj</button>
     </div>
-  </div>
+  </form>
 </template>
 
 <style scoped>
