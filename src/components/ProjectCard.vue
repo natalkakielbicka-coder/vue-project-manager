@@ -1,4 +1,6 @@
 <script setup>
+import { projectStatuses } from '../constants/projectStatuses'
+
 defineProps({
   project: {
     type: Object,
@@ -41,9 +43,9 @@ function formatDate(date) {
       :value="project.status"
       @change="$emit('status-change', project.id, $event.target.value)"
     >
-      <option>Do zrobienia</option>
-      <option>W trakcie</option>
-      <option>Gotowe</option>
+      <option v-for="status in projectStatuses" :key="status" :value="status">
+        {{ status }}
+      </option>
     </select>
 
     <p>{{ project.description }}</p>

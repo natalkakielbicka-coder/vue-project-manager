@@ -4,6 +4,7 @@ import ProjectFilters from './components/ProjectFilters.vue'
 import ProjectForm from './components/ProjectForm.vue'
 import ProjectCard from './components/ProjectCard.vue'
 import ConfirmModal from './components/ConfirmModal.vue'
+import { projectStatuses } from './constants/projectStatuses'
 
 const projectToDeleteId = ref(null)
 
@@ -13,7 +14,7 @@ const savedStatus = localStorage.getItem('selectedStatus')
 
 const selectedStatus = ref(savedStatus || 'Wszystkie')
 
-const statuses = ['Wszystkie', 'Do zrobienia', 'W trakcie', 'Gotowe']
+const statuses = ['Wszystkie', ...projectStatuses]
 
 const searchQuery = ref('')
 

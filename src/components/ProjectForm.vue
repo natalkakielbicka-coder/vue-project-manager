@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
+import { projectStatuses } from '../constants/projectStatuses'
 
 const props = defineProps({
   project: {
@@ -73,9 +74,9 @@ function cancelEdit() {
       <label for="project-status">Status</label>
 
       <select id="project-status" v-model="projectStatus">
-        <option>Do zrobienia</option>
-        <option>W trakcie</option>
-        <option>Gotowe</option>
+        <option v-for="status in projectStatuses" :key="status" :value="status">
+          {{ status }}
+        </option>
       </select>
     </div>
 
