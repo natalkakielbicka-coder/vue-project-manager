@@ -62,7 +62,7 @@ function cancelEdit() {
     <div class="form-group">
       <label for="project-name">Nazwa projektu</label>
 
-      <input id="project-name" v-model="projectName" type="text" />
+      <input id="project-name" v-model="projectName" type="text" @input="errorMessage = ''" />
 
       <p v-if="errorMessage" class="error">
         {{ errorMessage }}
@@ -82,7 +82,9 @@ function cancelEdit() {
     <div class="form-group">
       <label for="project-description">Opis projektu</label>
 
-      <textarea id="project-description" v-model="projectDescription"></textarea>
+      <textarea id="project-description" v-model="projectDescription" maxlength="300"></textarea>
+
+      <p class="character-count">{{ projectDescription.length }} / 300</p>
     </div>
 
     <div class="form-actions">
@@ -159,5 +161,12 @@ textarea {
   margin: 0;
   font-size: 13px;
   color: #dc2626;
+}
+
+.character-count {
+  margin: 6px 0 0;
+  text-align: right;
+  font-size: 12px;
+  color: #9ca3af;
 }
 </style>
