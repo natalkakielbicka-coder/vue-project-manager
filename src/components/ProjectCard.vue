@@ -6,7 +6,7 @@ defineProps({
   },
 })
 
-defineEmits(['edit', 'delete'])
+defineEmits(['edit', 'delete', 'duplicate'])
 
 function formatDate(date) {
   return new Date(date).toLocaleDateString('pl-PL')
@@ -40,6 +40,8 @@ function formatDate(date) {
 
     <div class="project-actions">
       <button class="edit-button" @click="$emit('edit', project)">Edytuj</button>
+
+      <button class="duplicate-button" @click="$emit('duplicate', project)">Duplikuj</button>
 
       <button class="delete-button" @click="$emit('delete', project.id)">Usuń</button>
     </div>
@@ -134,6 +136,15 @@ function formatDate(date) {
 
 .delete-button:hover {
   background: #fecaca;
+}
+
+.duplicate-button {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.duplicate-button:hover {
+  background: #e5e7eb;
 }
 
 .project-date {

@@ -112,6 +112,16 @@ const statusCounts = computed(() => {
     Gotowe: projects.value.filter((project) => project.status === 'Gotowe').length,
   }
 })
+
+function duplicateProject(project) {
+  projects.value.push({
+    ...project,
+    id: Date.now(),
+    name: `${project.name} - kopia`,
+    createdAt: new Date().toISOString(),
+    updatedAt: null,
+  })
+}
 </script>
 
 <template>
@@ -150,6 +160,7 @@ const statusCounts = computed(() => {
         :key="project.id"
         :project="project"
         @edit="editProject"
+        @duplicate="duplicateProject"
         @delete="deleteProject"
       />
     </div>
