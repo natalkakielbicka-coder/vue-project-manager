@@ -154,12 +154,14 @@ const statusCounts = computed(() => {
       />
     </div>
 
-    <ConfirmModal
-      v-if="projectToDeleteId !== null"
-      message="Czy na pewno chcesz usunąć ten projekt?"
-      @confirm="confirmDelete"
-      @cancel="cancelDelete"
-    />
+    <Teleport to="body">
+      <ConfirmModal
+        v-if="projectToDeleteId !== null"
+        message="Czy na pewno chcesz usunąć ten projekt?"
+        @confirm="confirmDelete"
+        @cancel="cancelDelete"
+      />
+    </Teleport>
   </main>
 </template>
 
