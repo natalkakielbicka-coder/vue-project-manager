@@ -6,7 +6,7 @@ defineProps({
   },
 })
 
-defineEmits(['edit', 'delete', 'duplicate'])
+defineEmits(['edit', 'delete', 'duplicate', 'status-change'])
 
 function formatDate(date) {
   return new Date(date).toLocaleDateString('pl-PL')
@@ -35,6 +35,16 @@ function formatDate(date) {
     >
       {{ project.status }}
     </p>
+
+    <select
+      class="status-select"
+      :value="project.status"
+      @change="$emit('status-change', project.id, $event.target.value)"
+    >
+      <option>Do zrobienia</option>
+      <option>W trakcie</option>
+      <option>Gotowe</option>
+    </select>
 
     <p>{{ project.description }}</p>
 
@@ -151,5 +161,19 @@ function formatDate(date) {
   margin: -4px 0 14px;
   font-size: 13px;
   color: #9ca3af;
+}
+
+.status-select {
+  display: block;
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 9px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #374151;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
 }
 </style>

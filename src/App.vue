@@ -122,6 +122,13 @@ function duplicateProject(project) {
     updatedAt: null,
   })
 }
+
+function changeProjectStatus(id, status) {
+  const project = projects.value.find((project) => project.id === id)
+
+  project.status = status
+  project.updatedAt = new Date().toISOString()
+}
 </script>
 
 <template>
@@ -162,6 +169,7 @@ function duplicateProject(project) {
         @edit="editProject"
         @duplicate="duplicateProject"
         @delete="deleteProject"
+        @status-change="changeProjectStatus"
       />
     </div>
 
