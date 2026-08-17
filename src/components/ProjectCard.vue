@@ -64,9 +64,9 @@ function formatDate(date) {
 .project-card {
   position: relative;
   padding: 24px;
-  border: 1px solid #e5e7eb;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 16px;
-  background: #ffffff;
   box-shadow: 0 4px 20px rgb(17 24 39 / 5%);
   transition:
     transform 0.2s ease,
@@ -81,13 +81,13 @@ function formatDate(date) {
 .project-card h2 {
   margin: 0 0 12px;
   font-size: 20px;
-  color: #111827;
+  color: var(--text);
 }
 
 .project-card p {
   margin: 0 0 12px;
   line-height: 1.6;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .project-status {

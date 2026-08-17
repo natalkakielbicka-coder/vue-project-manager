@@ -109,18 +109,18 @@ function cancelEdit() {
 .form-group label {
   font-size: 14px;
   font-weight: 600;
-  color: #374151;
+  color: var(--text);
 }
 
 input,
 select,
 textarea {
   width: 100%;
-  border: 1px solid #d1d5db;
   border-radius: 10px;
   padding: 12px 14px;
-  background: #ffffff;
-  color: #111827;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
   font: inherit;
   outline: none;
 }

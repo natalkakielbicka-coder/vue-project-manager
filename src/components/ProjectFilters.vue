@@ -53,7 +53,7 @@ const emit = defineEmits(['update:searchQuery', 'update:selectedStatus', 'update
 .search {
   flex: 1 1 260px;
   min-width: 220px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 11px 14px;
   font: inherit;
@@ -63,11 +63,11 @@ const emit = defineEmits(['update:searchQuery', 'update:selectedStatus', 'update
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 10px 14px;
-  background: #ffffff;
-  color: #4b5563;
+  background: var(--surface);
+  color: var(--text);
   font: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -75,9 +75,9 @@ const emit = defineEmits(['update:searchQuery', 'update:selectedStatus', 'update
 }
 
 .filters button.active {
-  background: #4f46e5;
+  background: var(--primary);
   color: #ffffff;
-  border-color: #4f46e5;
+  border-color: var(--primary);
 }
 
 .filter-count {
@@ -101,11 +101,17 @@ const emit = defineEmits(['update:searchQuery', 'update:selectedStatus', 'update
 .sort {
   width: auto;
   min-width: 150px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border);
   border-radius: 10px;
+  color: var(--text);
   padding: 10px 14px;
-  background: #ffffff;
+  background: var(--surface);
   font: inherit;
+}
+
+.sort option {
+  background: var(--surface);
+  color: var(--text);
 }
 
 @media (max-width: 767px) {

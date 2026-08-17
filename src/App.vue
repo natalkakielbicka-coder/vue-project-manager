@@ -20,6 +20,10 @@ const searchQuery = ref('')
 
 const sortBy = ref('newest')
 
+const savedTheme = localStorage.getItem('theme')
+
+const darkMode = ref(savedTheme === 'dark')
+
 const filteredProjects = computed(() => {
   const filtered = projects.value.filter((project) => {
     const matchesStatus =
@@ -130,25 +134,36 @@ function changeProjectStatus(id, status) {
   project.status = status
   project.updatedAt = new Date().toISOString()
 }
+
+function toggleTheme() {
+  darkMode.value = !darkMode.value
+
+  localStorage.setItem('theme', darkMode.value ? 'dark' : 'light')
+}
 </script>
 
 <template>
-  <main class="app">
-    <h1>Project Manager</h1>
+  <div class="page" :class="{ dark: darkMode }">
+    <main class="app">
+      <button class="theme-toggle" @click="toggleTheme">
+        {{ darkMode ? '☀️ Jasny' : '🌙 Ciemny' }}
+      </button>
 
-    <p>Liczba projektów: {{ projects.length }}</p>
+      <h1>Project Manager</h1>
 
-    <ProjectForm :project="editingProject" @save="saveProject" @cancel="cancelEdit" />
+      <p>Liczba projektów: {{ projects.length }}</p>
 
-    <ProjectFilters
-      v-model:searchQuery="searchQuery"
-      v-model:selectedStatus="selectedStatus"
-      v-model:sortBy="sortBy"
-      :statuses="statuses"
-      :statusCounts="statusCounts"
-    />
+      <ProjectForm :project="editingProject" @save="saveProject" @cancel="cancelEdit" />
 
-    <!-- <select v-model="selectedStatus" class="filters">
+      <ProjectFilters
+        v-model:searchQuery="searchQuery"
+        v-model:selectedStatus="selectedStatus"
+        v-model:sortBy="sortBy"
+        :statuses="statuses"
+        :statusCounts="statusCounts"
+      />
+
+      <!-- <select v-model="selectedStatus" class="filters">
       <option
         v-for="status in ['Wszystkie', 'Do zrobienia', 'W trakcie', 'Gotowe']"
         :key="status"
@@ -158,31 +173,32 @@ function changeProjectStatus(id, status) {
       </option>
     </select> -->
 
-    <p v-if="filteredProjects.length === 0" class="empty-state">
-      Brak projektów spełniających kryteria.
-    </p>
+      <p v-if="filteredProjects.length === 0" class="empty-state">
+        Brak projektów spełniających kryteria.
+      </p>
 
-    <div v-else class="projects">
-      <ProjectCard
-        v-for="project in filteredProjects"
-        :key="project.id"
-        :project="project"
-        @edit="editProject"
-        @duplicate="duplicateProject"
-        @delete="deleteProject"
-        @status-change="changeProjectStatus"
-      />
-    </div>
+      <div v-else class="projects">
+        <ProjectCard
+          v-for="project in filteredProjects"
+          :key="project.id"
+          :project="project"
+          @edit="editProject"
+          @duplicate="duplicateProject"
+          @delete="deleteProject"
+          @status-change="changeProjectStatus"
+        />
+      </div>
 
-    <Teleport to="body">
-      <ConfirmModal
-        v-if="projectToDeleteId !== null"
-        message="Czy na pewno chcesz usunąć ten projekt?"
-        @confirm="confirmDelete"
-        @cancel="cancelDelete"
-      />
-    </Teleport>
-  </main>
+      <Teleport to="body">
+        <ConfirmModal
+          v-if="projectToDeleteId !== null"
+          message="Czy na pewno chcesz usunąć ten projekt?"
+          @confirm="confirmDelete"
+          @cancel="cancelDelete"
+        />
+      </Teleport>
+    </main>
+  </div>
 </template>
 
 <style>
@@ -210,12 +226,16 @@ body {
   padding: 64px 0;
 }
 
+.app > p {
+  color: var(--text-muted);
+}
+
 h1 {
   margin: 0 0 8px;
   font-size: clamp(32px, 5vw, 48px);
   line-height: 1.1;
   letter-spacing: -1.5px;
-  color: #111827;
+  color: var(--text);
 }
 
 .projects {
@@ -228,11 +248,52 @@ h1 {
 .empty-state {
   margin-top: 32px;
   padding: 24px;
-  border: 1px dashed #d1d5db;
   border-radius: 14px;
-  background: #ffffff;
-  color: #6b7280;
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
   text-align: center;
+}
+
+.app.dark {
+  color: #f9fafb;
+}
+
+.app.dark::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: #111827;
+}
+
+.theme-toggle {
+  margin-bottom: 30px;
+}
+
+.page {
+  --background: #f5f7fb;
+  --surface: #ffffff;
+  --text: #111827;
+  --text-muted: #6b7280;
+  --border: #e5e7eb;
+  --primary: #4f46e5;
+
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--text);
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.page.dark {
+  --background: #111827;
+  --surface: #1f2937;
+  --text: #f9fafb;
+  --text-muted: #9ca3af;
+  --border: #374151;
+  --primary: #818cf8;
 }
 
 @media (max-width: 767px) {
