@@ -11,7 +11,7 @@ const props = defineProps({
 
 const isDragging = ref(false)
 
-const emit = defineEmits(['edit', 'delete', 'duplicate', 'status-change', 'drag-start'])
+const emit = defineEmits(['edit', 'delete', 'duplicate', 'status-change', 'drag-start', 'drag-end'])
 
 function handleDragStart() {
   isDragging.value = true
@@ -20,6 +20,7 @@ function handleDragStart() {
 
 function handleDragEnd() {
   isDragging.value = false
+  emit('drag-end')
 }
 
 function formatDate(date) {
@@ -90,6 +91,9 @@ function formatDate(date) {
     opacity 0.2s ease,
     transform 0.2s ease,
     box-shadow 0.2s ease;
+
+  width: 100%;
+  min-width: 0;
 }
 
 .project-card.dragging {

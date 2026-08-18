@@ -149,6 +149,11 @@ function startDrag(projectId) {
   draggedProjectId.value = projectId
 }
 
+function endDrag() {
+  draggedProjectId.value = null
+  dragOverStatus.value = null
+}
+
 function dragOver(status) {
   dragOverStatus.value = status
 }
@@ -243,6 +248,7 @@ function getProjectsByStatus(status) {
               @delete="deleteProject"
               @status-change="changeProjectStatus"
               @drag-start="startDrag"
+              @drag-end="endDrag"
             />
           </div>
         </div>
@@ -357,13 +363,14 @@ h1 {
 
 .board {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
   margin-top: 40px;
   align-items: start;
 }
 
 .board-column {
+  min-width: 0;
   min-height: 300px;
   padding: 16px;
   border: 1px solid var(--border);
@@ -414,6 +421,7 @@ h1 {
 .board-projects {
   display: grid;
   gap: 14px;
+  min-width: 0;
 }
 
 .empty-column {
@@ -426,6 +434,12 @@ h1 {
   font-size: 13px;
 }
 
+@media (max-width: 1023px) {
+  .board {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
 @media (max-width: 767px) {
   .app {
     width: min(100% - 32px, 900px);
@@ -437,8 +451,6 @@ h1 {
   }
 
   .board {
-    grid-template-columns: 1fr;
-    gap: 16px;
     overflow-x: auto;
     margin-right: -16px;
     padding-right: 16px;
