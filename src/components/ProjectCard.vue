@@ -9,11 +9,18 @@ const props = defineProps({
   },
 })
 
-const isTouchDevice = window.matchMedia('(pointer: coarse)').matches
-
 const isDragging = ref(false)
 
 const emit = defineEmits(['edit', 'delete', 'duplicate', 'status-change', 'drag-start'])
+
+function handleDragStart() {
+  isDragging.value = true
+  emit('drag-start', props.project.id)
+}
+
+function handleDragEnd() {
+  isDragging.value = false
+}
 
 function formatDate(date) {
   return new Date(date).toLocaleDateString('pl-PL')
