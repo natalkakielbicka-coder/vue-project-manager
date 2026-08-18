@@ -28,6 +28,10 @@ const draggedProjectId = ref(null)
 
 const dragOverStatus = ref(null)
 
+const toastMessage = ref('')
+
+const toastType = ref('success')
+
 const filteredProjects = computed(() => {
   const filtered = projects.value.filter((project) => {
     const matchesStatus =
@@ -81,6 +85,8 @@ function saveProject(projectData) {
     project.updatedAt = new Date().toISOString()
 
     editingProject.value = null
+
+    showToast('Zmiany zostały zapisane', 'success')
   } else {
     projects.value.push({
       id: Date.now(),
@@ -88,6 +94,8 @@ function saveProject(projectData) {
       updatedAt: null,
       ...projectData,
     })
+
+    showToast('Projekt został dodany', 'success')
   }
 }
 
@@ -99,6 +107,8 @@ function confirmDelete() {
   projects.value = projects.value.filter((project) => project.id !== projectToDeleteId.value)
 
   projectToDeleteId.value = null
+
+  showToast('Projekt został usunięty', 'error')
 }
 
 function cancelDelete() {
@@ -130,6 +140,8 @@ function duplicateProject(project) {
     createdAt: new Date().toISOString(),
     updatedAt: null,
   })
+
+  showToast('Projekt został zduplikowany')
 }
 
 function changeProjectStatus(id, status) {
@@ -190,6 +202,15 @@ function clearFilters() {
   searchQuery.value = ''
   selectedStatus.value = 'Wszystkie'
   sortBy.value = 'newest'
+}
+
+function showToast(message, type = 'success') {
+  toastMessage.value = message
+  toastType.value = type
+
+  setTimeout(() => {
+    toastMessage.value = ''
+  }, 2500)
 }
 </script>
 
@@ -271,6 +292,12 @@ function clearFilters() {
           </div>
         </div>
       </div>
+
+      <Transition name="toast">
+        <div v-if="toastMessage" class="toast" :class="`toast-${toastType}`">
+          {{ toastMessage }}
+        </div>
+      </Transition>
 
       <Teleport to="body">
         <ConfirmModal
@@ -478,6 +505,70 @@ h1 {
   color: var(--primary);
 }
 
+.toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1100;
+
+  max-width: 320px;
+  padding: 12px 18px;
+
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  background: var(--surface);
+  color: var(--text);
+
+  box-shadow: 0 12px 35px rgb(0 0 0 / 15%);
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.toast-enter-active,
+.toast-leave-active {
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.toast-enter-from,
+.toast-leave-to {
+  opacity: 0;
+  transform: translateY(15px);
+}
+
+.toast-enter-to,
+.toast-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast-success {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.toast-error {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.page.dark .toast-success {
+  background: #14532d;
+  color: #dcfce7;
+  border-color: #166534;
+}
+
+.page.dark .toast-error {
+  background: #7f1d1d;
+  color: #fee2e2;
+  border-color: #991b1b;
+}
+
 @media (max-width: 1023px) {
   .board {
     grid-template-columns: 1fr;
@@ -519,6 +610,13 @@ h1 {
 
   .clear-filters {
     align-self: flex-start;
+  }
+
+  .toast {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    max-width: none;
   }
 }
 </style>
