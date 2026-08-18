@@ -24,6 +24,8 @@ const savedTheme = localStorage.getItem('theme')
 
 const darkMode = ref(savedTheme === 'dark')
 
+const draggedProjectId = ref(null)
+
 const filteredProjects = computed(() => {
   const filtered = projects.value.filter((project) => {
     const matchesStatus =
@@ -140,6 +142,23 @@ function toggleTheme() {
 
   localStorage.setItem('theme', darkMode.value ? 'dark' : 'light')
 }
+
+function startDrag(projectId) {
+  draggedProjectId.value = projectId
+}
+
+function dropProject(status) {
+  const project = projects.value.find((project) => project.id === draggedProjectId.value)
+
+  if (!project) {
+    return
+  }
+
+  project.status = status
+  project.updatedAt = new Date().toISOString()
+
+  draggedProjectId.value = null
+}
 </script>
 
 <template>
@@ -177,16 +196,35 @@ function toggleTheme() {
         Brak projektów spełniających kryteria.
       </p>
 
-      <div v-else class="projects">
-        <ProjectCard
-          v-for="project in filteredProjects"
-          :key="project.id"
-          :project="project"
-          @edit="editProject"
-          @duplicate="duplicateProject"
-          @delete="deleteProject"
-          @status-change="changeProjectStatus"
-        />
+      <div v-else class="board">
+        <div
+          v-for="status in projectStatuses"
+          :key="status"
+          class="board-column"
+          @dragover.prevent
+          @drop="dropProject(status)"
+        >
+          <div class="board-column-header">
+            <h2>{{ status }}</h2>
+
+            <span>
+              {{ filteredProjects.filter((project) => project.status === status).length }}
+            </span>
+          </div>
+
+          <div class="board-projects">
+            <ProjectCard
+              v-for="project in filteredProjects.filter((project) => project.status === status)"
+              :key="project.id"
+              :project="project"
+              @edit="editProject"
+              @duplicate="duplicateProject"
+              @delete="deleteProject"
+              @status-change="changeProjectStatus"
+              @drag-start="startDrag"
+            />
+          </div>
+        </div>
       </div>
 
       <Teleport to="body">
@@ -294,6 +332,61 @@ h1 {
   --text-muted: #9ca3af;
   --border: #374151;
   --primary: #818cf8;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+  align-items: start;
+}
+
+.board-column {
+  min-height: 300px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.board-column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.board-column-header h2 {
+  margin: 0;
+  font-size: 16px;
+  color: var(--text);
+}
+
+.board-column-header span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--background);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.board-projects {
+  display: grid;
+  gap: 14px;
+}
+
+@media (max-width: 900px) {
+  .board {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 767px) {

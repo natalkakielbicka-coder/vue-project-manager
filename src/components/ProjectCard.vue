@@ -8,7 +8,7 @@ defineProps({
   },
 })
 
-defineEmits(['edit', 'delete', 'duplicate', 'status-change'])
+defineEmits(['edit', 'delete', 'duplicate', 'status-change', 'drag-start'])
 
 function formatDate(date) {
   return new Date(date).toLocaleDateString('pl-PL')
@@ -16,7 +16,7 @@ function formatDate(date) {
 </script>
 
 <template>
-  <article class="project-card">
+  <article class="project-card" draggable="true" @dragstart="$emit('drag-start', project.id)">
     <h2>{{ project.name }}</h2>
 
     <p v-if="project.createdAt" class="project-date">
@@ -71,6 +71,11 @@ function formatDate(date) {
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
+  cursor: grab;
+}
+
+.project-card:active {
+  cursor: grabbing;
 }
 
 .project-card:hover {
