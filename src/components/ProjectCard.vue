@@ -194,17 +194,7 @@ function formatDate(date) {
 }
 
 .status-select {
-  display: block;
-  width: 100%;
-  margin-bottom: 16px;
-  padding: 9px 12px;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  background: #ffffff;
-  color: #374151;
-  font: inherit;
-  font-size: 13px;
-  cursor: pointer;
+  display: none;
 }
 @media (hover: hover) and (pointer: fine) {
   .project-card {
@@ -213,6 +203,22 @@ function formatDate(date) {
 
   .project-card:active {
     cursor: grabbing;
+  }
+}
+
+@media (max-width: 1023px) {
+  .status-select {
+    display: block;
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
   }
 }
 </style>
