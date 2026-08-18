@@ -170,6 +170,10 @@ function dropProject(status) {
   draggedProjectId.value = null
   dragOverStatus.value = null
 }
+
+function getProjectsByStatus(status) {
+  return filteredProjects.value.filter((project) => project.status === status)
+}
 </script>
 
 <template>
@@ -221,13 +225,17 @@ function dropProject(status) {
             <h2>{{ status }}</h2>
 
             <span>
-              {{ filteredProjects.filter((project) => project.status === status).length }}
+              {{ getProjectsByStatus(status).length }}
             </span>
           </div>
 
           <div class="board-projects">
+            <p v-if="getProjectsByStatus(status).length === 0" class="empty-column">
+              Brak projektów
+            </p>
+
             <ProjectCard
-              v-for="project in filteredProjects.filter((project) => project.status === status)"
+              v-for="project in getProjectsByStatus(status)"
               :key="project.id"
               :project="project"
               @edit="editProject"
@@ -408,10 +416,14 @@ h1 {
   gap: 14px;
 }
 
-@media (max-width: 900px) {
-  .board {
-    grid-template-columns: 1fr;
-  }
+.empty-column {
+  margin: 0;
+  padding: 28px 16px;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 13px;
 }
 
 @media (max-width: 767px) {
