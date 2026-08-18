@@ -1,7 +1,8 @@
 <script setup>
+import { ref } from 'vue'
 import { projectStatuses } from '../constants/projectStatuses'
 
-defineProps({
+const props = defineProps({
   project: {
     type: Object,
     required: true,
@@ -10,7 +11,9 @@ defineProps({
 
 const isTouchDevice = window.matchMedia('(pointer: coarse)').matches
 
-defineEmits(['edit', 'delete', 'duplicate', 'status-change', 'drag-start'])
+const isDragging = ref(false)
+
+const emit = defineEmits(['edit', 'delete', 'duplicate', 'status-change', 'drag-start'])
 
 function formatDate(date) {
   return new Date(date).toLocaleDateString('pl-PL')
@@ -20,8 +23,10 @@ function formatDate(date) {
 <template>
   <article
     class="project-card"
-    :draggable="!isTouchDevice"
-    @dragstart="$emit('drag-start', project.id)"
+    :class="{ dragging: isDragging }"
+    draggable="true"
+    @dragstart="handleDragStart"
+    @dragend="handleDragEnd"
   >
     <h2>{{ project.name }}</h2>
 
@@ -75,8 +80,14 @@ function formatDate(date) {
   border-radius: 16px;
   box-shadow: 0 4px 20px rgb(17 24 39 / 5%);
   transition:
+    opacity 0.2s ease,
     transform 0.2s ease,
     box-shadow 0.2s ease;
+}
+
+.project-card.dragging {
+  opacity: 0.45;
+  transform: scale(0.98);
 }
 
 .project-card:hover {

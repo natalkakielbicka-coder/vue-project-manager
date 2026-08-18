@@ -26,6 +26,8 @@ const darkMode = ref(savedTheme === 'dark')
 
 const draggedProjectId = ref(null)
 
+const dragOverStatus = ref(null)
+
 const filteredProjects = computed(() => {
   const filtered = projects.value.filter((project) => {
     const matchesStatus =
@@ -147,6 +149,14 @@ function startDrag(projectId) {
   draggedProjectId.value = projectId
 }
 
+function dragOver(status) {
+  dragOverStatus.value = status
+}
+
+function dragLeave() {
+  dragOverStatus.value = null
+}
+
 function dropProject(status) {
   const project = projects.value.find((project) => project.id === draggedProjectId.value)
 
@@ -158,6 +168,7 @@ function dropProject(status) {
   project.updatedAt = new Date().toISOString()
 
   draggedProjectId.value = null
+  dragOverStatus.value = null
 }
 </script>
 
@@ -201,7 +212,9 @@ function dropProject(status) {
           v-for="status in projectStatuses"
           :key="status"
           class="board-column"
-          @dragover.prevent
+          :class="{ 'drag-over': dragOverStatus === status }"
+          @dragover.prevent="dragOver(status)"
+          @dragleave="dragLeave"
           @drop="dropProject(status)"
         >
           <div class="board-column-header">
@@ -348,6 +361,18 @@ h1 {
   border: 1px solid var(--border);
   border-radius: 16px;
   background: var(--surface);
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.board-column.drag-over {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 7%, var(--surface));
+  box-shadow: 0 0 0 3px rgb(99 102 241 / 12%);
+  transform: translateY(-3px);
 }
 
 .board-column-header {
