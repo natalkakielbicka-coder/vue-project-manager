@@ -47,7 +47,6 @@ const emit = defineEmits(['update:searchQuery', 'update:selectedStatus', 'update
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 40px;
 }
 
 .search {

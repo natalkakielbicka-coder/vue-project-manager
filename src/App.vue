@@ -179,6 +179,18 @@ function dropProject(status) {
 function getProjectsByStatus(status) {
   return filteredProjects.value.filter((project) => project.status === status)
 }
+
+const hasActiveFilters = computed(() => {
+  return (
+    searchQuery.value !== '' || selectedStatus.value !== 'Wszystkie' || sortBy.value !== 'newest'
+  )
+})
+
+function clearFilters() {
+  searchQuery.value = ''
+  selectedStatus.value = 'Wszystkie'
+  sortBy.value = 'newest'
+}
 </script>
 
 <template>
@@ -194,13 +206,19 @@ function getProjectsByStatus(status) {
 
       <ProjectForm :project="editingProject" @save="saveProject" @cancel="cancelEdit" />
 
-      <ProjectFilters
-        v-model:searchQuery="searchQuery"
-        v-model:selectedStatus="selectedStatus"
-        v-model:sortBy="sortBy"
-        :statuses="statuses"
-        :statusCounts="statusCounts"
-      />
+      <div class="filters-row">
+        <ProjectFilters
+          v-model:searchQuery="searchQuery"
+          v-model:selectedStatus="selectedStatus"
+          v-model:sortBy="sortBy"
+          :statuses="statuses"
+          :statusCounts="statusCounts"
+        />
+
+        <button v-if="hasActiveFilters" class="clear-filters" @click="clearFilters">
+          Wyczyść filtry
+        </button>
+      </div>
 
       <!-- <select v-model="selectedStatus" class="filters">
       <option
@@ -434,6 +452,32 @@ h1 {
   font-size: 13px;
 }
 
+.filters-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-top: 40px;
+}
+
+.clear-filters {
+  flex: 0 0 auto;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.clear-filters:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
 @media (max-width: 1023px) {
   .board {
     grid-template-columns: 1fr;
@@ -466,6 +510,15 @@ h1 {
 
   .board-projects {
     gap: 12px;
+  }
+
+  .filters-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .clear-filters {
+    align-self: flex-start;
   }
 }
 </style>
