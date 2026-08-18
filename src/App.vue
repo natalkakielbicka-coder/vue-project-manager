@@ -398,5 +398,25 @@ h1 {
   .projects {
     grid-template-columns: 1fr;
   }
+
+  .board {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    overflow-x: auto;
+    margin-right: -16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .board-column {
+    flex: 0 0 85%;
+    min-width: 280px;
+    scroll-snap-align: start;
+  }
+
+  .board-projects {
+    gap: 12px;
+  }
 }
 </style>

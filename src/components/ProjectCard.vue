@@ -8,6 +8,8 @@ defineProps({
   },
 })
 
+const isTouchDevice = window.matchMedia('(pointer: coarse)').matches
+
 defineEmits(['edit', 'delete', 'duplicate', 'status-change', 'drag-start'])
 
 function formatDate(date) {
@@ -16,7 +18,11 @@ function formatDate(date) {
 </script>
 
 <template>
-  <article class="project-card" draggable="true" @dragstart="$emit('drag-start', project.id)">
+  <article
+    class="project-card"
+    :draggable="!isTouchDevice"
+    @dragstart="$emit('drag-start', project.id)"
+  >
     <h2>{{ project.name }}</h2>
 
     <p v-if="project.createdAt" class="project-date">
@@ -71,11 +77,6 @@ function formatDate(date) {
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
-  cursor: grab;
-}
-
-.project-card:active {
-  cursor: grabbing;
 }
 
 .project-card:hover {
@@ -182,5 +183,14 @@ function formatDate(date) {
   font: inherit;
   font-size: 13px;
   cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) {
+  .project-card {
+    cursor: grab;
+  }
+
+  .project-card:active {
+    cursor: grabbing;
+  }
 }
 </style>
