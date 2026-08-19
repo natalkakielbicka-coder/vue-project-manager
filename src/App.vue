@@ -28,9 +28,7 @@ const draggedProjectId = ref(null)
 
 const dragOverStatus = ref(null)
 
-const toastMessage = ref('')
-
-const toastType = ref('success')
+const toasts = ref([])
 
 const filteredProjects = computed(() => {
   const filtered = projects.value.filter((project) => {
@@ -205,11 +203,16 @@ function clearFilters() {
 }
 
 function showToast(message, type = 'success') {
-  toastMessage.value = message
-  toastType.value = type
+  const toast = {
+    id: Date.now(),
+    message,
+    type,
+  }
+
+  toasts.value.push(toast)
 
   setTimeout(() => {
-    toastMessage.value = ''
+    toasts.value = toasts.value.filter((item) => item.id !== toast.id)
   }, 2500)
 }
 </script>
@@ -293,11 +296,13 @@ function showToast(message, type = 'success') {
         </div>
       </div>
 
-      <Transition name="toast">
-        <div v-if="toastMessage" class="toast" :class="`toast-${toastType}`">
-          {{ toastMessage }}
-        </div>
-      </Transition>
+      <div class="toast-container">
+        <TransitionGroup name="toast">
+          <div v-for="toast in toasts" :key="toast.id" class="toast" :class="`toast-${toast.type}`">
+            {{ toast.message }}
+          </div>
+        </TransitionGroup>
+      </div>
 
       <Teleport to="body">
         <ConfirmModal
@@ -506,22 +511,11 @@ h1 {
 }
 
 .toast {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  z-index: 1100;
-
-  max-width: 320px;
+  width: 100%;
   padding: 12px 18px;
-
   border: 1px solid var(--border);
   border-radius: 12px;
-
-  background: var(--surface);
-  color: var(--text);
-
   box-shadow: 0 12px 35px rgb(0 0 0 / 15%);
-
   font-size: 14px;
   font-weight: 600;
 }
@@ -555,6 +549,21 @@ h1 {
   border-color: #fecaca;
   background: #fef2f2;
   color: #b91c1c;
+}
+
+.toast-move {
+  transition: transform 0.3s ease;
+}
+
+.toast-container {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(320px, calc(100vw - 48px));
 }
 
 .page.dark .toast-success {
