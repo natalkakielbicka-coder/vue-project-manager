@@ -164,8 +164,7 @@ function startDrag(projectId) {
 }
 
 function endDrag() {
-  draggedProjectId.value = null
-  dragOverStatus.value = null
+  resetDragState()
 }
 
 function dragOver(status) {
@@ -186,18 +185,24 @@ function dropProject(status) {
   project.status = status
   project.updatedAt = new Date().toISOString()
 
+  resetDragState()
+}
+
+function resetDragState() {
   draggedProjectId.value = null
   dragOverStatus.value = null
 }
 
 function dropOnProject(targetProjectId, status) {
   if (draggedProjectId.value === targetProjectId) {
+    resetDragState()
     return
   }
 
   const draggedIndex = projects.value.findIndex((project) => project.id === draggedProjectId.value)
 
   if (draggedIndex === -1) {
+    resetDragState()
     return
   }
 
@@ -210,6 +215,10 @@ function dropOnProject(targetProjectId, status) {
 
   if (targetIndex === -1) {
     projects.value.push(draggedProject)
+
+    sortBy.value = 'custom'
+    resetDragState()
+
     return
   }
 
@@ -217,8 +226,7 @@ function dropOnProject(targetProjectId, status) {
 
   sortBy.value = 'custom'
 
-  draggedProjectId.value = null
-  dragOverStatus.value = null
+  resetDragState()
 }
 
 function getProjectsByStatus(status) {
