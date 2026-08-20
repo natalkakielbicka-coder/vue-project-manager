@@ -10,6 +10,7 @@ const props = defineProps({
 })
 
 const isDragging = ref(false)
+const dropPosition = ref(null)
 
 const emit = defineEmits([
   'edit',
@@ -31,8 +32,26 @@ function handleDragEnd() {
   emit('drag-end')
 }
 
+function handleDragLeave() {
+  dropPosition.value = null
+}
+
 function handleDrop() {
-  emit('drop-on-project', props.project.id, props.project.status)
+  const position = dropPosition.value || 'before'
+
+  emit('drop-on-project', props.project.id, props.project.status, dropPosition.value)
+
+  dropPosition.value = null
+}
+
+function handleDragOver(event) {
+  const card = event.currentTarget
+
+  const rect = card.getBoundingClientRect()
+
+  const middle = rect.top + rect.height / 2
+
+  dropPosition.value = event.clientY < middle ? 'before' : 'after'
 }
 
 function formatDate(date) {
@@ -43,11 +62,16 @@ function formatDate(date) {
 <template>
   <article
     class="project-card"
-    :class="{ dragging: isDragging }"
+    :class="{
+      dragging: isDragging,
+      'drop-before': dropPosition === 'before',
+      'drop-after': dropPosition === 'after',
+    }"
     draggable="true"
     @dragstart="handleDragStart"
     @dragend="handleDragEnd"
-    @dragover.prevent
+    @dragover.stop.prevent="handleDragOver"
+    @dragleave.stop="handleDragLeave"
     @drop.stop="handleDrop"
   >
     <h2>{{ project.name }}</h2>
@@ -210,6 +234,26 @@ function formatDate(date) {
 .status-select {
   display: none;
 }
+
+.project-card.drop-before::before,
+.project-card.drop-after::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--primary);
+}
+
+.project-card.drop-before::before {
+  top: -8px;
+}
+
+.project-card.drop-after::after {
+  bottom: -8px;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .project-card {
     cursor: grab;

@@ -193,7 +193,7 @@ function resetDragState() {
   dragOverStatus.value = null
 }
 
-function dropOnProject(targetProjectId, status) {
+function dropOnProject(targetProjectId, status, position) {
   if (draggedProjectId.value === targetProjectId) {
     resetDragState()
     return
@@ -222,7 +222,9 @@ function dropOnProject(targetProjectId, status) {
     return
   }
 
-  projects.value.splice(targetIndex, 0, draggedProject)
+  const insertIndex = position === 'after' ? targetIndex + 1 : targetIndex
+
+  projects.value.splice(insertIndex, 0, draggedProject)
 
   sortBy.value = 'custom'
 
