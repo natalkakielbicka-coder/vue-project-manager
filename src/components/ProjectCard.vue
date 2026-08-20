@@ -11,7 +11,15 @@ const props = defineProps({
 
 const isDragging = ref(false)
 
-const emit = defineEmits(['edit', 'delete', 'duplicate', 'status-change', 'drag-start', 'drag-end'])
+const emit = defineEmits([
+  'edit',
+  'delete',
+  'duplicate',
+  'status-change',
+  'drag-start',
+  'drag-end',
+  'drop-on-project',
+])
 
 function handleDragStart() {
   isDragging.value = true
@@ -21,6 +29,10 @@ function handleDragStart() {
 function handleDragEnd() {
   isDragging.value = false
   emit('drag-end')
+}
+
+function handleDrop() {
+  emit('drop-on-project', props.project.id, props.project.status)
 }
 
 function formatDate(date) {
@@ -35,6 +47,8 @@ function formatDate(date) {
     draggable="true"
     @dragstart="handleDragStart"
     @dragend="handleDragEnd"
+    @dragover.prevent
+    @drop.stop="handleDrop"
   >
     <h2>{{ project.name }}</h2>
 

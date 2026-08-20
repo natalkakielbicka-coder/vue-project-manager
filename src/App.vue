@@ -40,6 +40,10 @@ const filteredProjects = computed(() => {
     return matchesStatus && matchesSearch
   })
 
+  if (sortBy.value === 'custom') {
+    return filtered
+  }
+
   return [...filtered].sort((a, b) => {
     if (sortBy.value === 'newest') {
       return b.id - a.id
@@ -186,6 +190,37 @@ function dropProject(status) {
   dragOverStatus.value = null
 }
 
+function dropOnProject(targetProjectId, status) {
+  if (draggedProjectId.value === targetProjectId) {
+    return
+  }
+
+  const draggedIndex = projects.value.findIndex((project) => project.id === draggedProjectId.value)
+
+  if (draggedIndex === -1) {
+    return
+  }
+
+  const [draggedProject] = projects.value.splice(draggedIndex, 1)
+
+  draggedProject.status = status
+  draggedProject.updatedAt = new Date().toISOString()
+
+  const targetIndex = projects.value.findIndex((project) => project.id === targetProjectId)
+
+  if (targetIndex === -1) {
+    projects.value.push(draggedProject)
+    return
+  }
+
+  projects.value.splice(targetIndex, 0, draggedProject)
+
+  sortBy.value = 'custom'
+
+  draggedProjectId.value = null
+  dragOverStatus.value = null
+}
+
 function getProjectsByStatus(status) {
   return filteredProjects.value.filter((project) => project.status === status)
 }
@@ -291,6 +326,7 @@ function showToast(message, type = 'success') {
               @status-change="changeProjectStatus"
               @drag-start="startDrag"
               @drag-end="endDrag"
+              @drop-on-project="dropOnProject"
             />
           </div>
         </div>
