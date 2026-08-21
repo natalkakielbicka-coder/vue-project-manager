@@ -11,6 +11,8 @@ const props = defineProps({
 
 const isDragging = ref(false)
 const dropPosition = ref(null)
+const editingTaskId = ref(null)
+const editingTaskName = ref('')
 
 const emit = defineEmits([
   'edit',
@@ -21,6 +23,8 @@ const emit = defineEmits([
   'drag-end',
   'drop-on-project',
   'toggle-task',
+  'edit-task',
+  'delete-task',
 ])
 
 function handleDragStart() {
@@ -99,6 +103,29 @@ function getDeadlineInfo(project) {
     type: 'normal',
   }
 }
+
+function startEditTask(task) {
+  editingTaskId.value = task.id
+  editingTaskName.value = task.name
+}
+
+function saveTask(projectId, taskId) {
+  const taskName = editingTaskName.value.trim()
+
+  if (!taskName) {
+    return
+  }
+
+  emit('edit-task', projectId, taskId, taskName)
+
+  editingTaskId.value = null
+  editingTaskName.value = ''
+}
+
+function cancelTaskEdit() {
+  editingTaskId.value = null
+  editingTaskName.value = ''
+}
 </script>
 
 <template>
@@ -176,7 +203,7 @@ function getDeadlineInfo(project) {
     <p>{{ project.description }}</p>
 
     <div v-if="project.tasks?.length" class="project-tasks">
-      <label v-for="task in project.tasks" :key="task.id" class="project-task">
+      <div v-for="task in project.tasks" :key="task.id" class="project-task">
         <input
           type="checkbox"
           draggable="false"
@@ -185,10 +212,43 @@ function getDeadlineInfo(project) {
           @change="$emit('toggle-task', project.id, task.id)"
         />
 
-        <span :class="{ completed: task.completed }">
+        <input
+          v-if="editingTaskId === task.id"
+          v-model="editingTaskName"
+          class="task-edit-input"
+          type="text"
+          draggable="false"
+          @click.stop
+          @keydown.enter.prevent="saveTask(project.id, task.id)"
+          @keydown.esc="cancelTaskEdit"
+        />
+
+        <span v-else :class="{ completed: task.completed }">
           {{ task.name }}
         </span>
-      </label>
+
+        <div class="task-actions">
+          <template v-if="editingTaskId === task.id">
+            <button type="button" draggable="false" @click.stop="saveTask(project.id, task.id)">
+              ✓
+            </button>
+
+            <button type="button" draggable="false" @click.stop="cancelTaskEdit">×</button>
+          </template>
+
+          <template v-else>
+            <button type="button" draggable="false" @click.stop="startEditTask(task)">✎</button>
+
+            <button
+              type="button"
+              draggable="false"
+              @click.stop="$emit('delete-task', project.id, task.id)"
+            >
+              ×
+            </button>
+          </template>
+        </div>
+      </div>
     </div>
 
     <div class="project-actions">

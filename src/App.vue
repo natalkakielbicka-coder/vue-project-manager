@@ -320,6 +320,39 @@ function toggleTask(projectId, taskId) {
   }
 }
 
+function editTask(projectId, taskId, taskName) {
+  const project = projects.value.find((project) => project.id === projectId)
+
+  if (!project) {
+    return
+  }
+
+  const task = project.tasks?.find((task) => task.id === taskId)
+
+  if (!task) {
+    return
+  }
+
+  task.name = taskName
+  project.updatedAt = new Date().toISOString()
+
+  showToast('Zadanie zostało zmienione', 'success')
+}
+
+function deleteTask(projectId, taskId) {
+  const project = projects.value.find((project) => project.id === projectId)
+
+  if (!project) {
+    return
+  }
+
+  project.tasks = project.tasks.filter((task) => task.id !== taskId)
+
+  project.updatedAt = new Date().toISOString()
+
+  showToast('Zadanie zostało usunięte', 'error')
+}
+
 function confirmCompleteProject() {
   const project = projects.value.find((project) => project.id === projectToCompleteId.value)
 
@@ -417,6 +450,8 @@ function cancelCompleteProject() {
               @drag-end="endDrag"
               @drop-on-project="dropOnProject"
               @toggle-task="toggleTask"
+              @edit-task="editTask"
+              @delete-task="deleteTask"
             />
           </div>
         </div>
@@ -717,6 +752,47 @@ h1 {
   background: #7f1d1d;
   color: #fee2e2;
   border-color: #991b1b;
+}
+
+.project-task {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.project-task span {
+  flex: 1;
+}
+
+.task-edit-input {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+.task-actions {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.task-actions button {
+  border: 0;
+  padding: 4px 6px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.task-actions button:hover {
+  color: var(--primary);
 }
 
 @media (max-width: 1023px) {
