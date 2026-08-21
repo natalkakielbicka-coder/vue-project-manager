@@ -14,6 +14,7 @@ const emit = defineEmits(['save', 'cancel'])
 const projectName = ref('')
 const projectStatus = ref('Do zrobienia')
 const projectDescription = ref('')
+const projectDeadline = ref('')
 const errorMessage = ref('')
 
 watch(
@@ -23,6 +24,7 @@ watch(
       projectName.value = project.name
       projectStatus.value = project.status
       projectDescription.value = project.description
+      projectDeadline.value = project.deadline || ''
     }
   },
 )
@@ -39,12 +41,14 @@ function submitForm() {
     name: projectName.value,
     status: projectStatus.value,
     description: projectDescription.value,
+    deadline: projectDeadline.value,
   })
 
   if (!props.project) {
     projectName.value = ''
     projectStatus.value = 'Do zrobienia'
     projectDescription.value = ''
+    projectDeadline.value = ''
   }
 }
 
@@ -52,6 +56,7 @@ function cancelEdit() {
   projectName.value = ''
   projectStatus.value = 'Do zrobienia'
   projectDescription.value = ''
+  projectDeadline.value = ''
   errorMessage.value = ''
 
   emit('cancel')
@@ -78,6 +83,12 @@ function cancelEdit() {
           {{ status }}
         </option>
       </select>
+    </div>
+
+    <div class="form-group">
+      <label for="project-deadline">Termin</label>
+
+      <input id="project-deadline" v-model="projectDeadline" type="date" />
     </div>
 
     <div class="form-group">

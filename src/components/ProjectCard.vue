@@ -84,6 +84,10 @@ function formatDate(date) {
       Edytowano: {{ formatDate(project.updatedAt) }}
     </p>
 
+    <p v-if="project.deadline" class="project-deadline">
+      Termin: {{ formatDate(project.deadline) }}
+    </p>
+
     <p
       class="project-status"
       :class="{

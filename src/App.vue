@@ -84,6 +84,7 @@ function saveProject(projectData) {
     project.name = projectData.name
     project.status = projectData.status
     project.description = projectData.description
+    project.deadline = projectData.deadline
     project.updatedAt = new Date().toISOString()
 
     editingProject.value = null
