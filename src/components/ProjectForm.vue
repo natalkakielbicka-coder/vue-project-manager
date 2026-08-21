@@ -150,10 +150,10 @@ function addTask() {
           v-model="newTask"
           type="text"
           placeholder="Dodaj zadanie..."
-          @keyup.enter.prevent="addTask"
+          @keydown.enter.prevent="addTask"
         />
 
-        <button type="button" @click="addTask">Dodaj</button>
+        <button type="button" @click.stop="addTask">Dodaj</button>
       </div>
 
       <ul v-if="projectTasks.length" class="task-list">

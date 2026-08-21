@@ -163,7 +163,9 @@ function getDeadlineInfo(project) {
 
     <select
       class="status-select"
+      draggable="false"
       :value="project.status"
+      @click.stop
       @change="$emit('status-change', project.id, $event.target.value)"
     >
       <option v-for="status in projectStatuses" :key="status" :value="status">
@@ -177,7 +179,9 @@ function getDeadlineInfo(project) {
       <label v-for="task in project.tasks" :key="task.id" class="project-task">
         <input
           type="checkbox"
+          draggable="false"
           :checked="task.completed"
+          @click.stop
           @change="$emit('toggle-task', project.id, task.id)"
         />
 
@@ -188,11 +192,17 @@ function getDeadlineInfo(project) {
     </div>
 
     <div class="project-actions">
-      <button class="edit-button" @click="$emit('edit', project)">Edytuj</button>
+      <button class="edit-button" draggable="false" @click.stop="$emit('edit', project)">
+        Edytuj
+      </button>
 
-      <button class="duplicate-button" @click="$emit('duplicate', project)">Duplikuj</button>
+      <button class="duplicate-button" draggable="false" @click.stop="$emit('duplicate', project)">
+        Duplikuj
+      </button>
 
-      <button class="delete-button" @click="$emit('delete', project.id)">Usuń</button>
+      <button class="delete-button" draggable="false" @click.stop="$emit('delete', project.id)">
+        Usuń
+      </button>
     </div>
   </article>
 </template>

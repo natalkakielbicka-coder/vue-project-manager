@@ -293,6 +293,23 @@ function showToast(message, type = 'success') {
     toasts.value = toasts.value.filter((item) => item.id !== toast.id)
   }, 2500)
 }
+
+function toggleTask(projectId, taskId) {
+  const project = projects.value.find((project) => project.id === projectId)
+
+  if (!project) {
+    return
+  }
+
+  const task = project.tasks?.find((task) => task.id === taskId)
+
+  if (!task) {
+    return
+  }
+
+  task.completed = !task.completed
+  project.updatedAt = new Date().toISOString()
+}
 </script>
 
 <template>
@@ -370,6 +387,7 @@ function showToast(message, type = 'success') {
               @drag-start="startDrag"
               @drag-end="endDrag"
               @drop-on-project="dropOnProject"
+              @toggle-task="toggleTask"
             />
           </div>
         </div>
