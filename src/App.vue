@@ -157,6 +157,12 @@ function duplicateProject(project) {
     name: `${project.name} - kopia`,
     createdAt: new Date().toISOString(),
     updatedAt: null,
+    tasks: project.tasks
+      ? project.tasks.map((task) => ({
+          ...task,
+          id: crypto.randomUUID(),
+        }))
+      : [],
   })
 
   showToast('Projekt został zduplikowany')
