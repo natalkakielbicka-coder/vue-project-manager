@@ -57,6 +57,47 @@ function handleDragOver(event) {
 function formatDate(date) {
   return new Date(date).toLocaleDateString('pl-PL')
 }
+
+function getDeadlineInfo(project) {
+  if (!project.deadline || project.status === 'Gotowe') {
+    return null
+  }
+
+  const today = new Date()
+  const deadline = new Date(project.deadline)
+
+  today.setHours(0, 0, 0, 0)
+  deadline.setHours(0, 0, 0, 0)
+
+  const diffTime = deadline - today
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+  if (diffDays < 0) {
+    return {
+      text: `${Math.abs(diffDays)} dni po terminie`,
+      type: 'overdue',
+    }
+  }
+
+  if (diffDays === 0) {
+    return {
+      text: 'Termin dzisiaj',
+      type: 'today',
+    }
+  }
+
+  if (diffDays <= 3) {
+    return {
+      text: `Zostało ${diffDays} dni`,
+      type: 'soon',
+    }
+  }
+
+  return {
+    text: `Zostało ${diffDays} dni`,
+    type: 'normal',
+  }
+}
 </script>
 
 <template>
@@ -86,6 +127,14 @@ function formatDate(date) {
 
     <p v-if="project.deadline" class="project-deadline">
       Termin: {{ formatDate(project.deadline) }}
+    </p>
+
+    <p
+      v-if="getDeadlineInfo(project)"
+      class="deadline-info"
+      :class="`deadline-${getDeadlineInfo(project).type}`"
+    >
+      {{ getDeadlineInfo(project).text }}
     </p>
 
     <p
@@ -256,6 +305,24 @@ function formatDate(date) {
 
 .project-card.drop-after::after {
   bottom: -8px;
+}
+
+.deadline-info {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.deadline-overdue {
+  color: #dc2626 !important;
+}
+
+.deadline-today,
+.deadline-soon {
+  color: #d97706 !important;
+}
+
+.deadline-normal {
+  color: #16a34a !important;
 }
 
 @media (hover: hover) and (pointer: fine) {
