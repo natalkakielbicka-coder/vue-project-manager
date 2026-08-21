@@ -18,6 +18,9 @@ const projectDeadline = ref('')
 const projectPriority = ref('Średni')
 const errorMessage = ref('')
 
+const projectTasks = ref([])
+const newTask = ref('')
+
 watch(
   () => props.project,
   (project) => {
@@ -27,6 +30,8 @@ watch(
       projectDescription.value = project.description
       projectDeadline.value = project.deadline || ''
       projectPriority.value = project.priority || 'Średni'
+
+      projectTasks.value = project.tasks ? project.tasks.map((task) => ({ ...task })) : []
     }
   },
 )
@@ -45,6 +50,7 @@ function submitForm() {
     description: projectDescription.value,
     deadline: projectDeadline.value,
     priority: projectPriority.value,
+    tasks: projectTasks.value,
   })
 
   if (!props.project) {
@@ -53,6 +59,8 @@ function submitForm() {
     projectDescription.value = ''
     projectDeadline.value = ''
     projectPriority.value = 'Średni'
+    projectTasks.value = []
+    newTask.value = ''
   }
 }
 
@@ -63,8 +71,26 @@ function cancelEdit() {
   projectDeadline.value = ''
   errorMessage.value = ''
   projectPriority.value = 'Średni'
+  projectTasks.value = []
+  newTask.value = ''
 
   emit('cancel')
+}
+
+function addTask() {
+  const taskName = newTask.value.trim()
+
+  if (!taskName) {
+    return
+  }
+
+  projectTasks.value.push({
+    id: Date.now(),
+    name: taskName,
+    completed: false,
+  })
+
+  newTask.value = ''
 }
 </script>
 
@@ -113,6 +139,28 @@ function cancelEdit() {
       <textarea id="project-description" v-model="projectDescription" maxlength="300"></textarea>
 
       <p class="character-count">{{ projectDescription.length }} / 300</p>
+    </div>
+
+    <div class="form-group">
+      <label for="project-task">Zadania</label>
+
+      <div class="task-add">
+        <input
+          id="project-task"
+          v-model="newTask"
+          type="text"
+          placeholder="Dodaj zadanie..."
+          @keyup.enter.prevent="addTask"
+        />
+
+        <button type="button" @click="addTask">Dodaj</button>
+      </div>
+
+      <ul v-if="projectTasks.length" class="task-list">
+        <li v-for="task in projectTasks" :key="task.id">
+          {{ task.name }}
+        </li>
+      </ul>
     </div>
 
     <div class="form-actions">
@@ -196,5 +244,47 @@ textarea {
   text-align: right;
   font-size: 12px;
   color: #9ca3af;
+}
+
+.task-add {
+  display: flex;
+  gap: 8px;
+}
+
+.task-add input {
+  flex: 1;
+}
+
+.task-add button {
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 10px;
+  padding: 0 16px;
+  background: var(--primary);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.task-add button:hover {
+  opacity: 0.9;
+}
+
+.task-list {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.task-list li {
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--background);
+  color: var(--text);
+  font-size: 13px;
 }
 </style>

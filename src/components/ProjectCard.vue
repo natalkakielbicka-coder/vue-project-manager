@@ -20,6 +20,7 @@ const emit = defineEmits([
   'drag-start',
   'drag-end',
   'drop-on-project',
+  'toggle-task',
 ])
 
 function handleDragStart() {
@@ -171,6 +172,20 @@ function getDeadlineInfo(project) {
     </select>
 
     <p>{{ project.description }}</p>
+
+    <div v-if="project.tasks?.length" class="project-tasks">
+      <label v-for="task in project.tasks" :key="task.id" class="project-task">
+        <input
+          type="checkbox"
+          :checked="task.completed"
+          @change="$emit('toggle-task', project.id, task.id)"
+        />
+
+        <span :class="{ completed: task.completed }">
+          {{ task.name }}
+        </span>
+      </label>
+    </div>
 
     <div class="project-actions">
       <button class="edit-button" @click="$emit('edit', project)">Edytuj</button>
@@ -365,6 +380,31 @@ p.project-priority {
 .priority-urgent {
   background: #fee2e2;
   color: #b91c1c !important;
+}
+
+.project-tasks {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.project-task {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.project-task input {
+  width: auto;
+  margin: 0;
+}
+
+.project-task .completed {
+  color: var(--text-muted);
+  text-decoration: line-through;
 }
 
 @media (hover: hover) and (pointer: fine) {
