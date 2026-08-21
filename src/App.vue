@@ -6,6 +6,7 @@ import ProjectCard from './components/ProjectCard.vue'
 import ConfirmModal from './components/ConfirmModal.vue'
 import { projectStatuses } from './constants/projectStatuses'
 import { useToasts } from './composables/useToasts'
+import { useTheme } from './composables/useTheme'
 
 const projectToDeleteId = ref(null)
 
@@ -23,9 +24,7 @@ const searchQuery = ref('')
 
 const sortBy = ref('newest')
 
-const savedTheme = localStorage.getItem('theme')
-
-const darkMode = ref(savedTheme === 'dark')
+const { darkMode, toggleTheme } = useTheme()
 
 const draggedProjectId = ref(null)
 
@@ -174,12 +173,6 @@ function changeProjectStatus(id, status) {
 
   project.status = status
   project.updatedAt = new Date().toISOString()
-}
-
-function toggleTheme() {
-  darkMode.value = !darkMode.value
-
-  localStorage.setItem('theme', darkMode.value ? 'dark' : 'light')
 }
 
 function startDrag(projectId) {
