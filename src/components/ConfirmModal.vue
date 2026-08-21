@@ -1,10 +1,22 @@
 <script setup>
 import { onMounted, onUnmounted } from 'vue'
 
-defineProps({
+const props = defineProps({
   message: {
     type: String,
     required: true,
+  },
+  title: {
+    type: String,
+    default: 'Potwierdź',
+  },
+  confirmText: {
+    type: String,
+    default: 'Potwierdź',
+  },
+  variant: {
+    type: String,
+    default: 'danger',
   },
 })
 
@@ -28,14 +40,20 @@ onUnmounted(() => {
 <template>
   <div class="modal-backdrop" @click.self="$emit('cancel')">
     <div class="modal">
-      <h2>Usuń projekt</h2>
+      <h2>{{ props.title }}</h2>
 
       <p>{{ message }}</p>
 
       <div class="modal-actions">
         <button class="cancel-button" @click="$emit('cancel')">Anuluj</button>
 
-        <button class="delete-button" @click="$emit('confirm')">Usuń</button>
+        <button
+          class="confirm-button"
+          :class="`confirm-button--${props.variant}`"
+          @click="$emit('confirm')"
+        >
+          {{ props.confirmText }}
+        </button>
       </div>
     </div>
   </div>
@@ -96,5 +114,33 @@ onUnmounted(() => {
 .delete-button {
   background: #dc2626;
   color: #ffffff;
+}
+
+.confirm-button {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.confirm-button--danger {
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.confirm-button--danger:hover {
+  background: #b91c1c;
+}
+
+.confirm-button--success {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.confirm-button--success:hover {
+  background: #15803d;
 }
 </style>

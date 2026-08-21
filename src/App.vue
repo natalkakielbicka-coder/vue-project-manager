@@ -8,6 +8,8 @@ import { projectStatuses } from './constants/projectStatuses'
 
 const projectToDeleteId = ref(null)
 
+const projectToCompleteId = ref(null)
+
 const editingProject = ref(null)
 
 const savedStatus = localStorage.getItem('selectedStatus')
@@ -309,6 +311,33 @@ function toggleTask(projectId, taskId) {
 
   task.completed = !task.completed
   project.updatedAt = new Date().toISOString()
+
+  const allTasksCompleted =
+    project.tasks.length > 0 && project.tasks.every((task) => task.completed)
+
+  if (task.completed && allTasksCompleted && project.status !== 'Gotowe') {
+    projectToCompleteId.value = project.id
+  }
+}
+
+function confirmCompleteProject() {
+  const project = projects.value.find((project) => project.id === projectToCompleteId.value)
+
+  if (!project) {
+    projectToCompleteId.value = null
+    return
+  }
+
+  project.status = 'Gotowe'
+  project.updatedAt = new Date().toISOString()
+
+  projectToCompleteId.value = null
+
+  showToast('Projekt został oznaczony jako gotowy', 'success')
+}
+
+function cancelCompleteProject() {
+  projectToCompleteId.value = null
 }
 </script>
 
@@ -404,9 +433,24 @@ function toggleTask(projectId, taskId) {
       <Teleport to="body">
         <ConfirmModal
           v-if="projectToDeleteId !== null"
+          title="Usuń projekt"
           message="Czy na pewno chcesz usunąć ten projekt?"
+          confirm-text="Usuń"
+          variant="danger"
           @confirm="confirmDelete"
           @cancel="cancelDelete"
+        />
+      </Teleport>
+
+      <Teleport to="body">
+        <ConfirmModal
+          v-if="projectToCompleteId !== null"
+          title="Ukończyć projekt?"
+          message="Wszystkie zadania są wykonane. Przenieść projekt do „Gotowe”?"
+          confirm-text="Przenieś do Gotowe"
+          variant="success"
+          @confirm="confirmCompleteProject"
+          @cancel="cancelCompleteProject"
         />
       </Teleport>
     </main>
