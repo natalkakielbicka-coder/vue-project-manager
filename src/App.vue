@@ -57,6 +57,17 @@ const filteredProjects = computed(() => {
       return a.name.localeCompare(b.name, 'pl')
     }
 
+    if (sortBy.value === 'priority') {
+      const priorityOrder = {
+        Pilny: 4,
+        Wysoki: 3,
+        Średni: 2,
+        Niski: 1,
+      }
+
+      return priorityOrder[b.priority || 'Średni'] - priorityOrder[a.priority || 'Średni']
+    }
+
     return 0
   })
 })
@@ -85,6 +96,7 @@ function saveProject(projectData) {
     project.status = projectData.status
     project.description = projectData.description
     project.deadline = projectData.deadline
+    project.priority = projectData.priority
     project.updatedAt = new Date().toISOString()
 
     editingProject.value = null

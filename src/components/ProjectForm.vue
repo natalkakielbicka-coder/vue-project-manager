@@ -15,6 +15,7 @@ const projectName = ref('')
 const projectStatus = ref('Do zrobienia')
 const projectDescription = ref('')
 const projectDeadline = ref('')
+const projectPriority = ref('Średni')
 const errorMessage = ref('')
 
 watch(
@@ -25,6 +26,7 @@ watch(
       projectStatus.value = project.status
       projectDescription.value = project.description
       projectDeadline.value = project.deadline || ''
+      projectPriority.value = project.priority || 'Średni'
     }
   },
 )
@@ -42,6 +44,7 @@ function submitForm() {
     status: projectStatus.value,
     description: projectDescription.value,
     deadline: projectDeadline.value,
+    priority: projectPriority.value,
   })
 
   if (!props.project) {
@@ -49,6 +52,7 @@ function submitForm() {
     projectStatus.value = 'Do zrobienia'
     projectDescription.value = ''
     projectDeadline.value = ''
+    projectPriority.value = 'Średni'
   }
 }
 
@@ -58,6 +62,7 @@ function cancelEdit() {
   projectDescription.value = ''
   projectDeadline.value = ''
   errorMessage.value = ''
+  projectPriority.value = 'Średni'
 
   emit('cancel')
 }
@@ -82,6 +87,17 @@ function cancelEdit() {
         <option v-for="status in projectStatuses" :key="status" :value="status">
           {{ status }}
         </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="project-priority">Priorytet</label>
+
+      <select id="project-priority" v-model="projectPriority">
+        <option value="Niski">Niski</option>
+        <option value="Średni">Średni</option>
+        <option value="Wysoki">Wysoki</option>
+        <option value="Pilny">Pilny</option>
       </select>
     </div>
 

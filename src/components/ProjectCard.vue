@@ -138,6 +138,18 @@ function getDeadlineInfo(project) {
     </p>
 
     <p
+      class="project-priority"
+      :class="{
+        'priority-low': project.priority === 'Niski',
+        'priority-medium': project.priority === 'Średni',
+        'priority-high': project.priority === 'Wysoki',
+        'priority-urgent': project.priority === 'Pilny',
+      }"
+    >
+      {{ project.priority || 'Średni' }}
+    </p>
+
+    <p
       class="project-status"
       :class="{
         'status-todo': project.status === 'Do zrobienia',
@@ -323,6 +335,36 @@ function getDeadlineInfo(project) {
 
 .deadline-normal {
   color: #16a34a !important;
+}
+
+p.project-priority {
+  display: inline-flex;
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-right: 3px;
+}
+
+.priority-low {
+  background: #f3f4f6;
+  color: #6b7280 !important;
+}
+
+.priority-medium {
+  background: #dbeafe;
+  color: #1d4ed8 !important;
+}
+
+.priority-high {
+  background: #ffedd5;
+  color: #c2410c !important;
+}
+
+.priority-urgent {
+  background: #fee2e2;
+  color: #b91c1c !important;
 }
 
 @media (hover: hover) and (pointer: fine) {

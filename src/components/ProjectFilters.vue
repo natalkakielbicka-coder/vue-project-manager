@@ -37,6 +37,7 @@ const emit = defineEmits(['update:searchQuery', 'update:selectedStatus', 'update
       <option value="newest">Najnowsze</option>
       <option value="oldest">Najstarsze</option>
       <option value="name">Nazwa A–Z</option>
+      <option value="priority">Priorytet</option>
       <option value="custom">Własna kolejność</option>
     </select>
   </div>
