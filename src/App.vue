@@ -393,6 +393,36 @@ function exportProjects() {
 
   showToast('Dane zostały wyeksportowane', 'success')
 }
+
+function importProjects(event) {
+  const file = event.target.files[0]
+
+  if (!file) {
+    return
+  }
+
+  const reader = new FileReader()
+
+  reader.onload = () => {
+    try {
+      const importedProjects = JSON.parse(reader.result)
+
+      if (!Array.isArray(importedProjects)) {
+        throw new Error('Nieprawidłowy format pliku')
+      }
+
+      projects.value = importedProjects
+
+      showToast('Dane zostały zaimportowane', 'success')
+    } catch {
+      showToast('Nie udało się zaimportować danych', 'error')
+    }
+
+    event.target.value = ''
+  }
+
+  reader.readAsText(file)
+}
 </script>
 
 <template>
@@ -406,6 +436,11 @@ function exportProjects() {
 
       <button type="button" class="export-button" @click="exportProjects">Eksportuj dane</button>
 
+      <label class="import-button">
+        Importuj dane
+
+        <input type="file" accept=".json,application/json" @change="importProjects" />
+      </label>
       <p>Liczba projektów: {{ projects.length }}</p>
 
       <ProjectForm :project="editingProject" @save="saveProject" @cancel="cancelEdit" />
@@ -833,6 +868,23 @@ h1 {
 
 .export-button:hover {
   background: var(--background);
+}
+
+.import-button {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 9px 14px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.import-button input {
+  display: none;
 }
 
 @media (max-width: 1023px) {
