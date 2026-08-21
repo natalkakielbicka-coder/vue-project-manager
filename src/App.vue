@@ -176,14 +176,33 @@ function dragLeave() {
 }
 
 function dropProject(status) {
-  const project = projects.value.find((project) => project.id === draggedProjectId.value)
+  const draggedIndex = projects.value.findIndex((project) => project.id === draggedProjectId.value)
 
-  if (!project) {
+  if (draggedIndex === -1) {
+    resetDragState()
     return
   }
 
-  project.status = status
-  project.updatedAt = new Date().toISOString()
+  const [draggedProject] = projects.value.splice(draggedIndex, 1)
+
+  draggedProject.status = status
+  draggedProject.updatedAt = new Date().toISOString()
+
+  let lastProjectIndex = -1
+
+  projects.value.forEach((project, index) => {
+    if (project.status === status) {
+      lastProjectIndex = index
+    }
+  })
+
+  if (lastProjectIndex === -1) {
+    projects.value.push(draggedProject)
+  } else {
+    projects.value.splice(lastProjectIndex + 1, 0, draggedProject)
+  }
+
+  sortBy.value = 'custom'
 
   resetDragState()
 }

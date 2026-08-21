@@ -39,7 +39,7 @@ function handleDragLeave() {
 function handleDrop() {
   const position = dropPosition.value || 'before'
 
-  emit('drop-on-project', props.project.id, props.project.status, dropPosition.value)
+  emit('drop-on-project', props.project.id, props.project.status, position)
 
   dropPosition.value = null
 }
