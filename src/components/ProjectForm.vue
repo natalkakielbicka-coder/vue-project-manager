@@ -36,6 +36,17 @@ watch(
   },
 )
 
+function resetForm() {
+  projectName.value = ''
+  projectStatus.value = 'Do zrobienia'
+  projectDescription.value = ''
+  projectDeadline.value = ''
+  projectPriority.value = 'Średni'
+  projectTasks.value = []
+  newTask.value = ''
+  errorMessage.value = ''
+}
+
 function submitForm() {
   if (projectName.value.trim() === '') {
     errorMessage.value = 'Podaj nazwę projektu'
@@ -54,26 +65,12 @@ function submitForm() {
   })
 
   if (!props.project) {
-    projectName.value = ''
-    projectStatus.value = 'Do zrobienia'
-    projectDescription.value = ''
-    projectDeadline.value = ''
-    projectPriority.value = 'Średni'
-    projectTasks.value = []
-    newTask.value = ''
+    resetForm()
   }
 }
 
 function cancelEdit() {
-  projectName.value = ''
-  projectStatus.value = 'Do zrobienia'
-  projectDescription.value = ''
-  projectDeadline.value = ''
-  errorMessage.value = ''
-  projectPriority.value = 'Średni'
-  projectTasks.value = []
-  newTask.value = ''
-
+  resetForm()
   emit('cancel')
 }
 
