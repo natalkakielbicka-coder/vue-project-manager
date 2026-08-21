@@ -372,6 +372,27 @@ function confirmCompleteProject() {
 function cancelCompleteProject() {
   projectToCompleteId.value = null
 }
+
+function exportProjects() {
+  const data = JSON.stringify(projects.value, null, 2)
+
+  const blob = new Blob([data], {
+    type: 'application/json',
+  })
+
+  const url = URL.createObjectURL(blob)
+
+  const link = document.createElement('a')
+
+  link.href = url
+  link.download = 'projects.json'
+
+  link.click()
+
+  URL.revokeObjectURL(url)
+
+  showToast('Dane zostały wyeksportowane', 'success')
+}
 </script>
 
 <template>
@@ -382,6 +403,8 @@ function cancelCompleteProject() {
       </button>
 
       <h1>Project Manager</h1>
+
+      <button type="button" class="export-button" @click="exportProjects">Eksportuj dane</button>
 
       <p>Liczba projektów: {{ projects.length }}</p>
 
@@ -793,6 +816,23 @@ h1 {
 
 .task-actions button:hover {
   color: var(--primary);
+}
+
+.export-button {
+  margin-bottom: 24px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 9px 14px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.export-button:hover {
+  background: var(--background);
 }
 
 @media (max-width: 1023px) {
