@@ -7,6 +7,7 @@ import ConfirmModal from './components/ConfirmModal.vue'
 import { projectStatuses } from './constants/projectStatuses'
 import { useToasts } from './composables/useToasts'
 import { useTheme } from './composables/useTheme'
+import { useProjectTransfer } from './composables/useProjectTransfer'
 
 const projectToDeleteId = ref(null)
 
@@ -31,6 +32,8 @@ const draggedProjectId = ref(null)
 const dragOverStatus = ref(null)
 
 const { toasts, showToast } = useToasts()
+
+const { exportProjects, importProjects } = useProjectTransfer(projects, showToast)
 
 const filteredProjects = computed(() => {
   const filtered = projects.value.filter((project) => {
@@ -357,57 +360,6 @@ function confirmCompleteProject() {
 
 function cancelCompleteProject() {
   projectToCompleteId.value = null
-}
-
-function exportProjects() {
-  const data = JSON.stringify(projects.value, null, 2)
-
-  const blob = new Blob([data], {
-    type: 'application/json',
-  })
-
-  const url = URL.createObjectURL(blob)
-
-  const link = document.createElement('a')
-
-  link.href = url
-  link.download = 'projects.json'
-
-  link.click()
-
-  URL.revokeObjectURL(url)
-
-  showToast('Dane zostały wyeksportowane', 'success')
-}
-
-function importProjects(event) {
-  const file = event.target.files[0]
-
-  if (!file) {
-    return
-  }
-
-  const reader = new FileReader()
-
-  reader.onload = () => {
-    try {
-      const importedProjects = JSON.parse(reader.result)
-
-      if (!Array.isArray(importedProjects)) {
-        throw new Error('Nieprawidłowy format pliku')
-      }
-
-      projects.value = importedProjects
-
-      showToast('Dane zostały zaimportowane', 'success')
-    } catch {
-      showToast('Nie udało się zaimportować danych', 'error')
-    }
-
-    event.target.value = ''
-  }
-
-  reader.readAsText(file)
 }
 </script>
 
