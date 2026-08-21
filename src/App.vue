@@ -5,6 +5,7 @@ import ProjectForm from './components/ProjectForm.vue'
 import ProjectCard from './components/ProjectCard.vue'
 import ConfirmModal from './components/ConfirmModal.vue'
 import { projectStatuses } from './constants/projectStatuses'
+import { useToasts } from './composables/useToasts'
 
 const projectToDeleteId = ref(null)
 
@@ -30,7 +31,7 @@ const draggedProjectId = ref(null)
 
 const dragOverStatus = ref(null)
 
-const toasts = ref([])
+const { toasts, showToast } = useToasts()
 
 const filteredProjects = computed(() => {
   const filtered = projects.value.filter((project) => {
@@ -286,20 +287,6 @@ function clearFilters() {
   searchQuery.value = ''
   selectedStatus.value = 'Wszystkie'
   sortBy.value = 'newest'
-}
-
-function showToast(message, type = 'success') {
-  const toast = {
-    id: Date.now(),
-    message,
-    type,
-  }
-
-  toasts.value.push(toast)
-
-  setTimeout(() => {
-    toasts.value = toasts.value.filter((item) => item.id !== toast.id)
-  }, 2500)
 }
 
 function toggleTask(projectId, taskId) {
