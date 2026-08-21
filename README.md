@@ -4,6 +4,14 @@ A responsive project management application built with **Vue 3** and **Vite**.
 
 The app allows users to manage projects on a Kanban-style board, organize tasks, track deadlines and priorities, and persist data locally in the browser.
 
+## Live Demo
+
+[View live application](https://natalkakielbicka-coder.github.io/vue-project-manager/)
+
+## Preview
+
+![Project Manager preview](docs/project-manager-preview.png)
+
 ## Features
 
 ### Project management
