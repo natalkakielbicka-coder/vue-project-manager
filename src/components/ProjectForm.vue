@@ -92,7 +92,25 @@ function addTask() {
 </script>
 
 <template>
-  <form class="project-form" @submit.prevent="submitForm">
+  <form
+    class="project-form"
+    :class="{ 'project-form--editing': project }"
+    @submit.prevent="submitForm"
+  >
+    <div class="form-heading">
+      <div>
+        <h2>
+          {{ project ? 'Edytuj projekt' : 'Nowy projekt' }}
+        </h2>
+
+        <p>
+          {{ project ? `Edytujesz: ${project.name}` : 'Dodaj nowy projekt do tablicy' }}
+        </p>
+      </div>
+
+      <span v-if="project" class="editing-badge"> Tryb edycji </span>
+    </div>
+
     <div class="form-group">
       <label for="project-name">Nazwa projektu</label>
 
@@ -283,5 +301,48 @@ textarea {
   background: var(--background);
   color: var(--text);
   font-size: 13px;
+}
+
+.form-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.form-heading h2 {
+  margin: 0 0 5px;
+  color: var(--text);
+  font-size: 20px;
+}
+
+.form-heading p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.editing-badge {
+  flex-shrink: 0;
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.project-form--editing {
+  padding: 20px;
+  border: 1px solid var(--primary);
+  border-radius: 16px;
+}
+
+@media (max-width: 767px) {
+  .form-heading {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 </style>

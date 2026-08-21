@@ -207,20 +207,30 @@ function cancelCompleteProject() {
 <template>
   <div class="page" :class="{ dark: darkMode }">
     <main class="app">
-      <button class="theme-toggle" @click="toggleTheme">
-        {{ darkMode ? '☀️ Jasny' : '🌙 Ciemny' }}
-      </button>
+      <div class="app-header">
+        <div>
+          <h1>Project Manager</h1>
 
-      <h1>Project Manager</h1>
+          <p class="projects-count">
+            {{ projects.length }}
+            {{ projects.length === 1 ? 'projekt' : 'projektów' }}
+          </p>
+        </div>
 
-      <button type="button" class="export-button" @click="exportProjects">Eksportuj dane</button>
+        <div class="app-tools">
+          <button type="button" class="tool-button" @click="exportProjects">Eksportuj</button>
 
-      <label class="import-button">
-        Importuj dane
+          <label class="tool-button import-button">
+            Importuj
 
-        <input type="file" accept=".json,application/json" @change="importProjects" />
-      </label>
-      <p>Liczba projektów: {{ projects.length }}</p>
+            <input type="file" accept=".json,application/json" @change="importProjects" />
+          </label>
+
+          <button type="button" class="tool-button" @click="toggleTheme">
+            {{ darkMode ? '☀️' : '🌙' }}
+          </button>
+        </div>
+      </div>
 
       <ProjectForm :project="editingProject" @save="saveProject" @cancel="cancelEdit" />
 
@@ -393,10 +403,6 @@ h1 {
   inset: 0;
   z-index: -1;
   background: #111827;
-}
-
-.theme-toggle {
-  margin-bottom: 30px;
 }
 
 .page {
@@ -632,8 +638,31 @@ h1 {
   color: var(--primary);
 }
 
-.export-button {
-  margin-bottom: 24px;
+.app-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.projects-count {
+  margin: 8px 0 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.app-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tool-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 9px 14px;
@@ -645,21 +674,13 @@ h1 {
   cursor: pointer;
 }
 
-.export-button:hover {
-  background: var(--background);
+.tool-button:hover {
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
-.import-button {
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 9px 14px;
-  background: var(--surface);
-  color: var(--text);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
+.import-button input {
+  display: none;
 }
 
 .import-button input {
@@ -683,16 +704,20 @@ h1 {
   }
 
   .board {
+    display: flex;
+    gap: 16px;
     overflow-x: auto;
     margin-right: -16px;
     padding-right: 16px;
     padding-bottom: 16px;
     scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
   }
 
   .board-column {
     flex: 0 0 85%;
     min-width: 280px;
+    max-width: 360px;
     scroll-snap-align: start;
   }
 
@@ -714,6 +739,18 @@ h1 {
     bottom: 16px;
     left: 16px;
     max-width: none;
+  }
+  .app-header {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .app-tools {
+    width: 100%;
+  }
+
+  .app-tools .tool-button {
+    flex: 1;
   }
 }
 </style>

@@ -502,4 +502,40 @@ p.project-priority {
     cursor: pointer;
   }
 }
+
+@media (max-width: 767px) {
+  .project-card {
+    padding: 18px;
+  }
+
+  .project-actions {
+    flex-wrap: wrap;
+  }
+
+  .project-actions button {
+    flex: 1 1 calc(50% - 5px);
+  }
+
+  .delete-button {
+    flex-basis: 100% !important;
+  }
+
+  .project-task {
+    align-items: flex-start;
+  }
+
+  .task-actions {
+    flex-shrink: 0;
+  }
+
+  .project-card h2,
+  .project-card p {
+    overflow-wrap: anywhere;
+  }
+
+  .task-actions button {
+    min-width: 36px;
+    min-height: 36px;
+  }
+}
 </style>
