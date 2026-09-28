@@ -23,7 +23,7 @@ const projectsStore = useProjectsStore()
 
 const { projects } = storeToRefs(projectsStore)
 
-const { addProject, updateProject } = projectsStore
+const { addProject, updateProject, duplicateProject, changeProjectStatus } = projectsStore
 
 const { darkMode, toggleTheme } = useTheme()
 
@@ -84,31 +84,6 @@ function editProject(project) {
 
 function cancelEdit() {
   editingProject.value = null
-}
-
-function duplicateProject(project) {
-  projects.value.push({
-    ...project,
-    id: Date.now(),
-    name: `${project.name} - kopia`,
-    createdAt: new Date().toISOString(),
-    updatedAt: null,
-    tasks: project.tasks
-      ? project.tasks.map((task) => ({
-          ...task,
-          id: crypto.randomUUID(),
-        }))
-      : [],
-  })
-
-  showToast('Projekt został zduplikowany')
-}
-
-function changeProjectStatus(id, status) {
-  const project = projects.value.find((project) => project.id === id)
-
-  project.status = status
-  project.updatedAt = new Date().toISOString()
 }
 
 function toggleTask(projectId, taskId) {
@@ -186,6 +161,11 @@ function confirmCompleteProject() {
 
 function cancelCompleteProject() {
   projectToCompleteId.value = null
+}
+
+function handleDuplicateProject(project) {
+  duplicateProject(project)
+  showToast('Projekt został zduplikowany')
 }
 </script>
 
@@ -275,7 +255,7 @@ function cancelCompleteProject() {
               :key="project.id"
               :project="project"
               @edit="editProject"
-              @duplicate="duplicateProject"
+              @duplicate="handleDuplicateProject"
               @delete="deleteProject"
               @status-change="changeProjectStatus"
               @drag-start="startDrag"

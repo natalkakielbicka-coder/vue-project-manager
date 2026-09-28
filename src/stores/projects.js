@@ -39,9 +39,38 @@ export const useProjectsStore = defineStore('projects', () => {
     project.updatedAt = new Date().toISOString()
   }
 
+  function duplicateProject(project) {
+    projects.value.push({
+      ...project,
+      id: Date.now(),
+      name: `${project.name} - kopia`,
+      createdAt: new Date().toISOString(),
+      updatedAt: null,
+      tasks: project.tasks
+        ? project.tasks.map((task) => ({
+            ...task,
+            id: crypto.randomUUID(),
+          }))
+        : [],
+    })
+  }
+
+  function changeProjectStatus(id, status) {
+    const project = projects.value.find((project) => project.id === id)
+
+    if (!project) {
+      return
+    }
+
+    project.status = status
+    project.updatedAt = new Date().toISOString()
+  }
+
   return {
     projects,
     addProject,
     updateProject,
+    duplicateProject,
+    changeProjectStatus,
   }
 })
