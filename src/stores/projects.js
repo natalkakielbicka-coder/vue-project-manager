@@ -14,7 +14,34 @@ export const useProjectsStore = defineStore('projects', () => {
     { deep: true },
   )
 
+  function addProject(projectData) {
+    projects.value.push({
+      id: Date.now(),
+      createdAt: new Date().toISOString(),
+      updatedAt: null,
+      ...projectData,
+    })
+  }
+
+  function updateProject(id, projectData) {
+    const project = projects.value.find((project) => project.id === id)
+
+    if (!project) {
+      return
+    }
+
+    project.name = projectData.name
+    project.status = projectData.status
+    project.description = projectData.description
+    project.deadline = projectData.deadline
+    project.priority = projectData.priority
+    project.tasks = projectData.tasks
+    project.updatedAt = new Date().toISOString()
+  }
+
   return {
     projects,
+    addProject,
+    updateProject,
   }
 })

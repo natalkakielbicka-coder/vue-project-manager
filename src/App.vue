@@ -23,6 +23,8 @@ const projectsStore = useProjectsStore()
 
 const { projects } = storeToRefs(projectsStore)
 
+const { addProject, updateProject } = projectsStore
+
 const { darkMode, toggleTheme } = useTheme()
 
 const { toasts, showToast } = useToasts()
@@ -46,29 +48,18 @@ const { exportProjects, importProjects } = useProjectTransfer(projects, showToas
 
 function saveProject(projectData) {
   if (editingProject.value) {
-    const project = projects.value.find((project) => project.id === editingProject.value.id)
-
-    project.name = projectData.name
-    project.status = projectData.status
-    project.description = projectData.description
-    project.deadline = projectData.deadline
-    project.priority = projectData.priority
-    project.tasks = projectData.tasks
-    project.updatedAt = new Date().toISOString()
+    updateProject(editingProject.value.id, projectData)
 
     editingProject.value = null
 
     showToast('Zmiany zostały zapisane', 'success')
-  } else {
-    projects.value.push({
-      id: Date.now(),
-      createdAt: new Date().toISOString(),
-      updatedAt: null,
-      ...projectData,
-    })
 
-    showToast('Projekt został dodany', 'success')
+    return
   }
+
+  addProject(projectData)
+
+  showToast('Projekt został dodany', 'success')
 }
 
 function deleteProject(id) {
