@@ -1,5 +1,7 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useProjectsStore } from './stores/projects'
 import ProjectFilters from './components/ProjectFilters.vue'
 import ProjectForm from './components/ProjectForm.vue'
 import ProjectCard from './components/ProjectCard.vue'
@@ -17,9 +19,9 @@ const projectToCompleteId = ref(null)
 
 const editingProject = ref(null)
 
-const savedProjects = localStorage.getItem('projects')
+const projectsStore = useProjectsStore()
 
-const projects = ref(savedProjects ? JSON.parse(savedProjects) : [])
+const { projects } = storeToRefs(projectsStore)
 
 const { darkMode, toggleTheme } = useTheme()
 
@@ -41,14 +43,6 @@ const { dragOverStatus, startDrag, endDrag, dragOver, dragLeave, dropProject, dr
   useProjectDragDrop(projects, sortBy)
 
 const { exportProjects, importProjects } = useProjectTransfer(projects, showToast)
-
-watch(
-  projects,
-  (newProjects) => {
-    localStorage.setItem('projects', JSON.stringify(newProjects))
-  },
-  { deep: true },
-)
 
 function saveProject(projectData) {
   if (editingProject.value) {
