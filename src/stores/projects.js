@@ -66,6 +66,35 @@ export const useProjectsStore = defineStore('projects', () => {
     projects.value = projects.value.filter((project) => project.id !== id)
   }
 
+  function editTask(projectId, taskId, taskName) {
+    const project = projects.value.find((project) => project.id === projectId)
+
+    if (!project) {
+      return
+    }
+
+    const task = project.tasks?.find((task) => task.id === taskId)
+
+    if (!task) {
+      return
+    }
+
+    task.name = taskName
+    project.updatedAt = new Date().toISOString()
+  }
+
+  function deleteTask(projectId, taskId) {
+    const project = projects.value.find((project) => project.id === projectId)
+
+    if (!project) {
+      return
+    }
+
+    project.tasks = project.tasks.filter((task) => task.id !== taskId)
+
+    project.updatedAt = new Date().toISOString()
+  }
+
   return {
     projects,
     addProject,
@@ -73,5 +102,7 @@ export const useProjectsStore = defineStore('projects', () => {
     duplicateProject,
     changeProjectStatus,
     deleteProject,
+    editTask,
+    deleteTask,
   }
 })

@@ -29,6 +29,8 @@ const {
   duplicateProject,
   changeProjectStatus,
   deleteProject: deleteProjectFromStore,
+  editTask: editTaskFromStore,
+  deleteTask: deleteTaskFromStore,
 } = projectsStore
 
 const { darkMode, toggleTheme } = useTheme()
@@ -116,35 +118,14 @@ function toggleTask(projectId, taskId) {
   }
 }
 
-function editTask(projectId, taskId, taskName) {
-  const project = projects.value.find((project) => project.id === projectId)
-
-  if (!project) {
-    return
-  }
-
-  const task = project.tasks?.find((task) => task.id === taskId)
-
-  if (!task) {
-    return
-  }
-
-  task.name = taskName
-  project.updatedAt = new Date().toISOString()
+function handleEditTask(projectId, taskId, taskName) {
+  editTaskFromStore(projectId, taskId, taskName)
 
   showToast('Zadanie zostało zmienione', 'success')
 }
 
-function deleteTask(projectId, taskId) {
-  const project = projects.value.find((project) => project.id === projectId)
-
-  if (!project) {
-    return
-  }
-
-  project.tasks = project.tasks.filter((task) => task.id !== taskId)
-
-  project.updatedAt = new Date().toISOString()
+function handleDeleteTask(projectId, taskId) {
+  deleteTaskFromStore(projectId, taskId)
 
   showToast('Zadanie zostało usunięte', 'error')
 }
@@ -268,8 +249,8 @@ function handleDuplicateProject(project) {
               @drag-end="endDrag"
               @drop-on-project="dropOnProject"
               @toggle-task="toggleTask"
-              @edit-task="editTask"
-              @delete-task="deleteTask"
+              @edit-task="handleEditTask"
+              @delete-task="handleDeleteTask"
             />
           </div>
         </div>
