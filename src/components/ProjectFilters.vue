@@ -12,8 +12,6 @@ defineProps({
     required: true,
   },
 })
-
-const emit = defineEmits(['update:searchQuery', 'update:selectedStatus', 'update:sortBy'])
 </script>
 
 <template>
