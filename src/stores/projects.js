@@ -58,12 +58,12 @@ export const useProjectsStore = defineStore('projects', () => {
   function changeProjectStatus(id, status) {
     const project = projects.value.find((project) => project.id === id)
 
-    if (!project) {
-      return
-    }
-
     project.status = status
     project.updatedAt = new Date().toISOString()
+  }
+
+  function deleteProject(id) {
+    projects.value = projects.value.filter((project) => project.id !== id)
   }
 
   return {
@@ -72,5 +72,6 @@ export const useProjectsStore = defineStore('projects', () => {
     updateProject,
     duplicateProject,
     changeProjectStatus,
+    deleteProject,
   }
 })

@@ -23,7 +23,13 @@ const projectsStore = useProjectsStore()
 
 const { projects } = storeToRefs(projectsStore)
 
-const { addProject, updateProject, duplicateProject, changeProjectStatus } = projectsStore
+const {
+  addProject,
+  updateProject,
+  duplicateProject,
+  changeProjectStatus,
+  deleteProject: deleteProjectFromStore,
+} = projectsStore
 
 const { darkMode, toggleTheme } = useTheme()
 
@@ -67,7 +73,7 @@ function deleteProject(id) {
 }
 
 function confirmDelete() {
-  projects.value = projects.value.filter((project) => project.id !== projectToDeleteId.value)
+  deleteProjectFromStore(projectToDeleteId.value)
 
   projectToDeleteId.value = null
 
