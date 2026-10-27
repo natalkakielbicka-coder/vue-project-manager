@@ -125,13 +125,13 @@ function toggleTask(projectId: Project['id'], taskId: Task['id']): void {
   }
 }
 
-function handleEditTask(projectId, taskId, taskName) {
+function handleEditTask(projectId: Project['id'], taskId: Task['id'], taskName: string): void {
   editTaskFromStore(projectId, taskId, taskName)
 
   showToast('Zadanie zostało zmienione', 'success')
 }
 
-function handleDeleteTask(projectId, taskId) {
+function handleDeleteTask(projectId: Project['id'], taskId: Task['id']): void {
   deleteTaskFromStore(projectId, taskId)
 
   showToast('Zadanie zostało usunięte', 'error')
