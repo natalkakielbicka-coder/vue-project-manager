@@ -157,7 +157,7 @@ function cancelCompleteProject() {
   projectToCompleteId.value = null
 }
 
-function handleDuplicateProject(project) {
+function handleDuplicateProject(project: Project): void {
   duplicateProject(project)
   showToast('Projekt został zduplikowany')
 }
