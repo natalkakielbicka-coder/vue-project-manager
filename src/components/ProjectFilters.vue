@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ProjectStatus } from '../types/project'
 type FilterStatus = ProjectStatus | 'Wszystkie'
+type SortOption = 'newest' | 'oldest' | 'name' | 'priority' | 'custom'
 
 const searchQuery = defineModel<string>('searchQuery', {
   required: true,
@@ -8,7 +9,9 @@ const searchQuery = defineModel<string>('searchQuery', {
 const selectedStatus = defineModel<FilterStatus>('selectedStatus', {
   required: true,
 })
-const sortBy = defineModel('sortBy')
+const sortBy = defineModel<SortOption>('sortBy', {
+  required: true,
+})
 
 defineProps<{
   statuses: FilterStatus[]
