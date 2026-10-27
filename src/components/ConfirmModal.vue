@@ -15,7 +15,10 @@ const props = withDefaults(
   },
 )
 
-const emit = defineEmits(['confirm', 'cancel'])
+const emit = defineEmits<{
+  confirm: []
+  cancel: []
+}>()
 
 function handleKeydown(event: KeyboardEvent): void {
   if (event.key === 'Escape') {
