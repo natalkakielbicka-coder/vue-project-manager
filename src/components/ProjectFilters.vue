@@ -1,13 +1,18 @@
 <script setup lang="ts">
+import type { ProjectStatus } from '../types/project'
+type FilterStatus = ProjectStatus | 'Wszystkie'
+
 const searchQuery = defineModel<string>('searchQuery', {
   required: true,
 })
-const selectedStatus = defineModel('selectedStatus')
+const selectedStatus = defineModel<FilterStatus>('selectedStatus', {
+  required: true,
+})
 const sortBy = defineModel('sortBy')
 
 defineProps<{
-  statuses: string[]
-  statusCounts: Record<string, number>
+  statuses: FilterStatus[]
+  statusCounts: Record<FilterStatus, number>
 }>()
 </script>
 
