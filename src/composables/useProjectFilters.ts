@@ -2,11 +2,16 @@ import { ref, computed, watch } from 'vue'
 import { projectStatuses } from '../constants/projectStatuses'
 import type { Ref } from 'vue'
 import type { Project, ProjectStatus } from '../types/project'
+import type { FilterStatus } from '../types/filters'
 
 export function useProjectFilters(projects: Ref<Project[]>) {
   const savedStatus = localStorage.getItem('selectedStatus')
 
-  const selectedStatus = ref(savedStatus || 'Wszystkie')
+  const selectedStatus = ref<FilterStatus>(
+    savedStatus === 'Do zrobienia' || savedStatus === 'W trakcie' || savedStatus === 'Gotowe'
+      ? savedStatus
+      : 'Wszystkie',
+  )
   const searchQuery = ref('')
   const sortBy = ref('newest')
 
