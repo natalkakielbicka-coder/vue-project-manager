@@ -110,7 +110,7 @@ function startEditTask(task: Task): void {
   editingTaskName.value = task.name
 }
 
-function saveTask(projectId, taskId) {
+function saveTask(projectId: Project['id'], taskId: Task['id']): void {
   const taskName = editingTaskName.value.trim()
 
   if (!taskName) {
