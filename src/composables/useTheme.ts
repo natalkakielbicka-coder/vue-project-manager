@@ -3,7 +3,7 @@ import { ref } from 'vue'
 export function useTheme() {
   const savedTheme = localStorage.getItem('theme')
 
-  const darkMode = ref(savedTheme === 'dark')
+  const darkMode = ref<boolean>(savedTheme === 'dark')
 
   function toggleTheme() {
     darkMode.value = !darkMode.value
