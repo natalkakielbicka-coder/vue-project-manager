@@ -12,18 +12,18 @@ const dropPosition = ref<'before' | 'after' | null>(null)
 const editingTaskId = ref<Task['id'] | null>(null)
 const editingTaskName = ref('')
 
-const emit = defineEmits([
-  'edit',
-  'delete',
-  'duplicate',
-  'status-change',
-  'drag-start',
-  'drag-end',
-  'drop-on-project',
-  'toggle-task',
-  'edit-task',
-  'delete-task',
-])
+const emit = defineEmits<{
+  edit: [project: Project]
+  delete: [projectId: Project['id']]
+  duplicate: [project: Project]
+  'status-change': [projectId: Project['id'], status: ProjectStatus]
+  'drag-start': [projectId: Project['id']]
+  'drag-end': []
+  'drop-on-project': [projectId: Project['id'], status: ProjectStatus, position: 'before' | 'after']
+  'toggle-task': [projectId: Project['id'], taskId: Task['id']]
+  'edit-task': [projectId: Project['id'], taskId: Task['id'], name: string]
+  'delete-task': [projectId: Project['id'], taskId: Task['id']]
+}>()
 
 function handleDragStart() {
   isDragging.value = true
