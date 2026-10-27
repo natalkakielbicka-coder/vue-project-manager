@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { projectStatuses } from '../constants/projectStatuses'
-import type { Project, Task } from '../types/project'
+import type {
+  Project,
+  ProjectFormData,
+  ProjectStatus,
+  ProjectPriority,
+  Task,
+} from '../types/project'
 
 const props = withDefaults(
   defineProps<{
@@ -12,13 +18,16 @@ const props = withDefaults(
   },
 )
 
-const emit = defineEmits(['save', 'cancel'])
+const emit = defineEmits<{
+  save: [projectData: ProjectFormData]
+  cancel: []
+}>()
 
 const projectName = ref('')
-const projectStatus = ref('Do zrobienia')
+const projectStatus = ref<ProjectStatus>('Do zrobienia')
 const projectDescription = ref('')
 const projectDeadline = ref('')
-const projectPriority = ref('Średni')
+const projectPriority = ref<ProjectPriority>('Średni')
 const errorMessage = ref('')
 
 const projectTasks = ref<Task[]>([])
