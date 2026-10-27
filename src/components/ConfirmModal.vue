@@ -6,7 +6,7 @@ const props = withDefaults(
     message: string
     title?: string
     confirmText?: string
-    variant?: 'danger' | 'warning' | 'info'
+    variant?: 'danger' | 'warning' | 'info' | 'success'
   }>(),
   {
     title: 'Potwierdź',
