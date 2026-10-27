@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useProjectsStore } from './stores/projects'
@@ -12,12 +12,13 @@ import { useTheme } from './composables/useTheme'
 import { useProjectTransfer } from './composables/useProjectTransfer'
 import { useProjectFilters } from './composables/useProjectFilters'
 import { useProjectDragDrop } from './composables/useProjectDragDrop'
+import type { Project } from './types/project'
 
-const projectToDeleteId = ref(null)
+const projectToDeleteId = ref<Project['id'] | null>(null)
 
-const projectToCompleteId = ref(null)
+const projectToCompleteId = ref<Project['id'] | null>(null)
 
-const editingProject = ref(null)
+const editingProject = ref<Project | null>(null)
 
 const projectsStore = useProjectsStore()
 
@@ -74,8 +75,14 @@ function deleteProject(id) {
   projectToDeleteId.value = id
 }
 
-function confirmDelete() {
-  deleteProjectFromStore(projectToDeleteId.value)
+function confirmDelete(): void {
+  const projectId = projectToDeleteId.value
+
+  if (projectId === null) {
+    return
+  }
+
+  deleteProjectFromStore(projectId)
 
   projectToDeleteId.value = null
 
