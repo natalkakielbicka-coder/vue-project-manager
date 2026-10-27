@@ -12,7 +12,7 @@ import { useTheme } from './composables/useTheme'
 import { useProjectTransfer } from './composables/useProjectTransfer'
 import { useProjectFilters } from './composables/useProjectFilters'
 import { useProjectDragDrop } from './composables/useProjectDragDrop'
-import type { Project } from './types/project'
+import type { Project, ProjectFormData } from './types/project'
 
 const projectToDeleteId = ref<Project['id'] | null>(null)
 
@@ -55,7 +55,7 @@ const { dragOverStatus, startDrag, endDrag, dragOver, dragLeave, dropProject, dr
 
 const { exportProjects, importProjects } = useProjectTransfer(projects, showToast)
 
-function saveProject(projectData) {
+function saveProject(projectData: ProjectFormData): void {
   if (editingProject.value) {
     updateProject(editingProject.value.id, projectData)
 
@@ -71,7 +71,7 @@ function saveProject(projectData) {
   showToast('Projekt został dodany', 'success')
 }
 
-function deleteProject(id) {
+function deleteProject(id: Project['id']): void {
   projectToDeleteId.value = id
 }
 
@@ -93,7 +93,7 @@ function cancelDelete() {
   projectToDeleteId.value = null
 }
 
-function editProject(project) {
+function editProject(project: Project): void {
   editingProject.value = project
 }
 
