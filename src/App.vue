@@ -12,7 +12,7 @@ import { useTheme } from './composables/useTheme'
 import { useProjectTransfer } from './composables/useProjectTransfer'
 import { useProjectFilters } from './composables/useProjectFilters'
 import { useProjectDragDrop } from './composables/useProjectDragDrop'
-import type { Project, ProjectFormData } from './types/project'
+import type { Project, ProjectFormData, Task } from './types/project'
 
 const projectToDeleteId = ref<Project['id'] | null>(null)
 
@@ -101,7 +101,7 @@ function cancelEdit() {
   editingProject.value = null
 }
 
-function toggleTask(projectId, taskId) {
+function toggleTask(projectId: Project['id'], taskId: Task['id']): void {
   const project = projects.value.find((project) => project.id === projectId)
 
   if (!project) {
