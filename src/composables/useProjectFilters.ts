@@ -12,7 +12,7 @@ export function useProjectFilters(projects: Ref<Project[]>) {
       ? savedStatus
       : 'Wszystkie',
   )
-  const searchQuery = ref('')
+  const searchQuery = ref<string>('')
   const sortBy = ref<SortOption>('newest')
 
   const statuses = ['Wszystkie', ...projectStatuses]
