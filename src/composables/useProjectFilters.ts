@@ -15,7 +15,7 @@ export function useProjectFilters(projects: Ref<Project[]>) {
   const searchQuery = ref<string>('')
   const sortBy = ref<SortOption>('newest')
 
-  const statuses = ['Wszystkie', ...projectStatuses]
+  const statuses: FilterStatus[] = ['Wszystkie', ...projectStatuses]
 
   const filteredProjects = computed(() => {
     const filtered = projects.value.filter((project) => {
