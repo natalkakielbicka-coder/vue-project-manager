@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import type { ProjectStatus } from '../types/project'
-type FilterStatus = ProjectStatus | 'Wszystkie'
-type SortOption = 'newest' | 'oldest' | 'name' | 'priority' | 'custom'
+import type { FilterStatus, SortOption } from '../types/filters'
 
 const searchQuery = defineModel<string>('searchQuery', {
   required: true,
