@@ -1,10 +1,11 @@
 import { ref } from 'vue'
+import type { Toast, ToastType } from '../types/toast'
 
 export function useToasts() {
-  const toasts = ref([])
+  const toasts = ref<Toast[]>([])
 
-  function showToast(message, type = 'success') {
-    const toast = {
+  function showToast(message: string, type: ToastType = 'success'): void {
+    const toast: Toast = {
       id: Date.now(),
       message,
       type,
