@@ -1,17 +1,14 @@
-<script setup>
-const searchQuery = defineModel('searchQuery')
+<script setup lang="ts">
+const searchQuery = defineModel<string>('searchQuery', {
+  required: true,
+})
 const selectedStatus = defineModel('selectedStatus')
 const sortBy = defineModel('sortBy')
-defineProps({
-  statuses: {
-    type: Array,
-    required: true,
-  },
-  statusCounts: {
-    type: Object,
-    required: true,
-  },
-})
+
+defineProps<{
+  statuses: string[]
+  statusCounts: Record<string, number>
+}>()
 </script>
 
 <template>
