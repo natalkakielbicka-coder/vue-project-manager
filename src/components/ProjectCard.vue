@@ -1,18 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { projectStatuses } from '../constants/projectStatuses'
-import type { Project } from '../types/project'
+import type { Project, Task } from '../types/project'
 
-const props = defineProps({
-  project: {
-    type: Object,
-    required: true,
-  },
-})
+const props = defineProps<{
+  project: Project
+}>()
 
 const isDragging = ref(false)
 const dropPosition = ref<'before' | 'after' | null>(null)
-const editingTaskId = ref(null)
+const editingTaskId = ref<Task['id'] | null>(null)
 const editingTaskName = ref('')
 
 const emit = defineEmits([
@@ -108,7 +105,7 @@ function getDeadlineInfo(project: Project) {
   }
 }
 
-function startEditTask(task) {
+function startEditTask(task: Task): void {
   editingTaskId.value = task.id
   editingTaskName.value = task.name
 }
