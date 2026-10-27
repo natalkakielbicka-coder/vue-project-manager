@@ -1,13 +1,16 @@
-<script setup>
+<script setup lang="ts">
 import { ref, watch } from 'vue'
 import { projectStatuses } from '../constants/projectStatuses'
+import type { Project, Task } from '../types/project'
 
-const props = defineProps({
-  project: {
-    type: Object,
-    default: null,
+const props = withDefaults(
+  defineProps<{
+    project?: Project | null
+  }>(),
+  {
+    project: null,
   },
-})
+)
 
 const emit = defineEmits(['save', 'cancel'])
 
@@ -18,7 +21,7 @@ const projectDeadline = ref('')
 const projectPriority = ref('Średni')
 const errorMessage = ref('')
 
-const projectTasks = ref([])
+const projectTasks = ref<Task[]>([])
 const newTask = ref('')
 
 watch(
