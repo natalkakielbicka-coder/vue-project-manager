@@ -1,24 +1,19 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
 
-const props = defineProps({
-  message: {
-    type: String,
-    required: true,
+const props = withDefaults(
+  defineProps<{
+    message: string
+    title?: string
+    confirmText?: string
+    variant?: 'danger' | 'warning' | 'info'
+  }>(),
+  {
+    title: 'Potwierdź',
+    confirmText: 'Potwierdź',
+    variant: 'danger',
   },
-  title: {
-    type: String,
-    default: 'Potwierdź',
-  },
-  confirmText: {
-    type: String,
-    default: 'Potwierdź',
-  },
-  variant: {
-    type: String,
-    default: 'danger',
-  },
-})
+)
 
 const emit = defineEmits(['confirm', 'cancel'])
 
