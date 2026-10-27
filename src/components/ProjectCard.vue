@@ -1,6 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { projectStatuses } from '../constants/projectStatuses'
+import type { Project } from '../types/project'
 
 const props = defineProps({
   project: {
@@ -10,7 +11,7 @@ const props = defineProps({
 })
 
 const isDragging = ref(false)
-const dropPosition = ref(null)
+const dropPosition = ref<'before' | 'after' | null>(null)
 const editingTaskId = ref(null)
 const editingTaskName = ref('')
 
@@ -49,21 +50,24 @@ function handleDrop() {
   dropPosition.value = null
 }
 
-function handleDragOver(event) {
+function handleDragOver(event: DragEvent): void {
   const card = event.currentTarget
 
-  const rect = card.getBoundingClientRect()
+  if (!(card instanceof HTMLElement)) {
+    return
+  }
 
+  const rect = card.getBoundingClientRect()
   const middle = rect.top + rect.height / 2
 
   dropPosition.value = event.clientY < middle ? 'before' : 'after'
 }
 
-function formatDate(date) {
+function formatDate(date: string): string {
   return new Date(date).toLocaleDateString('pl-PL')
 }
 
-function getDeadlineInfo(project) {
+function getDeadlineInfo(project: Project) {
   if (!project.deadline || project.status === 'Gotowe') {
     return null
   }
@@ -74,7 +78,7 @@ function getDeadlineInfo(project) {
   today.setHours(0, 0, 0, 0)
   deadline.setHours(0, 0, 0, 0)
 
-  const diffTime = deadline - today
+  const diffTime = deadline.getTime() - today.getTime()
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
   if (diffDays < 0) {
