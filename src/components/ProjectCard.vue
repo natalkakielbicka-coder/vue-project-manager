@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { projectStatuses } from '../constants/projectStatuses'
 import type { Project, Task } from '../types/project'
 
@@ -105,6 +105,8 @@ function getDeadlineInfo(project: Project) {
   }
 }
 
+const deadlineInfo = computed(() => getDeadlineInfo(props.project))
+
 function startEditTask(task: Task): void {
   editingTaskId.value = task.id
   editingTaskName.value = task.name
@@ -157,13 +159,8 @@ function cancelTaskEdit() {
     <p v-if="project.deadline" class="project-deadline">
       Termin: {{ formatDate(project.deadline) }}
     </p>
-
-    <p
-      v-if="getDeadlineInfo(project)"
-      class="deadline-info"
-      :class="`deadline-${getDeadlineInfo(project).type}`"
-    >
-      {{ getDeadlineInfo(project).text }}
+    <p v-if="deadlineInfo" class="deadline-info" :class="`deadline-${deadlineInfo.type}`">
+      {{ deadlineInfo.text }}
     </p>
 
     <p
