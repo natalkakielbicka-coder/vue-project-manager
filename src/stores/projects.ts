@@ -1,10 +1,26 @@
 import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
 
-export const useProjectsStore = defineStore('projects', () => {
-  const savedProjects = localStorage.getItem('projects')
+import type { Project, ProjectFormData, ProjectStatus, Task } from '../types/project'
 
-  const projects = ref(savedProjects ? JSON.parse(savedProjects) : [])
+export const useProjectsStore = defineStore('projects', () => {
+  function loadProjects(): Project[] {
+    const savedProjects = localStorage.getItem('projects')
+
+    if (!savedProjects) {
+      return []
+    }
+
+    try {
+      const parsed: unknown = JSON.parse(savedProjects)
+
+      return Array.isArray(parsed) ? (parsed as Project[]) : []
+    } catch {
+      return []
+    }
+  }
+
+  const projects = ref<Project[]>(loadProjects())
 
   watch(
     projects,
@@ -14,7 +30,7 @@ export const useProjectsStore = defineStore('projects', () => {
     { deep: true },
   )
 
-  function addProject(projectData) {
+  function addProject(projectData: ProjectFormData): void {
     projects.value.push({
       id: Date.now(),
       createdAt: new Date().toISOString(),
@@ -23,7 +39,7 @@ export const useProjectsStore = defineStore('projects', () => {
     })
   }
 
-  function updateProject(id, projectData) {
+  function updateProject(id: number, projectData: ProjectFormData): void {
     const project = projects.value.find((project) => project.id === id)
 
     if (!project) {
@@ -39,7 +55,7 @@ export const useProjectsStore = defineStore('projects', () => {
     project.updatedAt = new Date().toISOString()
   }
 
-  function duplicateProject(project) {
+  function duplicateProject(project: Project): void {
     projects.value.push({
       ...project,
       id: Date.now(),
@@ -47,7 +63,7 @@ export const useProjectsStore = defineStore('projects', () => {
       createdAt: new Date().toISOString(),
       updatedAt: null,
       tasks: project.tasks
-        ? project.tasks.map((task) => ({
+        ? project.tasks.map((task: Task) => ({
             ...task,
             id: crypto.randomUUID(),
           }))
@@ -55,18 +71,22 @@ export const useProjectsStore = defineStore('projects', () => {
     })
   }
 
-  function changeProjectStatus(id, status) {
+  function changeProjectStatus(id: number, status: ProjectStatus): void {
     const project = projects.value.find((project) => project.id === id)
+
+    if (!project) {
+      return
+    }
 
     project.status = status
     project.updatedAt = new Date().toISOString()
   }
 
-  function deleteProject(id) {
+  function deleteProject(id: number): void {
     projects.value = projects.value.filter((project) => project.id !== id)
   }
 
-  function editTask(projectId, taskId, taskName) {
+  function editTask(projectId: number, taskId: number | string, taskName: string): void {
     const project = projects.value.find((project) => project.id === projectId)
 
     if (!project) {
@@ -83,7 +103,7 @@ export const useProjectsStore = defineStore('projects', () => {
     project.updatedAt = new Date().toISOString()
   }
 
-  function deleteTask(projectId, taskId) {
+  function deleteTask(projectId: number, taskId: number | string): void {
     const project = projects.value.find((project) => project.id === projectId)
 
     if (!project) {
