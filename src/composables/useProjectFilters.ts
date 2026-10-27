@@ -2,7 +2,7 @@ import { ref, computed, watch } from 'vue'
 import { projectStatuses } from '../constants/projectStatuses'
 import type { Ref } from 'vue'
 import type { Project, ProjectStatus } from '../types/project'
-import type { FilterStatus } from '../types/filters'
+import type { FilterStatus, SortOption } from '../types/filters'
 
 export function useProjectFilters(projects: Ref<Project[]>) {
   const savedStatus = localStorage.getItem('selectedStatus')
@@ -13,7 +13,7 @@ export function useProjectFilters(projects: Ref<Project[]>) {
       : 'Wszystkie',
   )
   const searchQuery = ref('')
-  const sortBy = ref('newest')
+  const sortBy = ref<SortOption>('newest')
 
   const statuses = ['Wszystkie', ...projectStatuses]
 
