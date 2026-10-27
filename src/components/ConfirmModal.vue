@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
@@ -22,7 +22,7 @@ const props = defineProps({
 
 const emit = defineEmits(['confirm', 'cancel'])
 
-function handleKeydown(event) {
+function handleKeydown(event: KeyboardEvent): void {
   if (event.key === 'Escape') {
     emit('cancel')
   }
