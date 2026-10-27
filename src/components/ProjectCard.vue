@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { projectStatuses } from '../constants/projectStatuses'
-import type { Project, Task } from '../types/project'
+import type { Project, ProjectStatus, Task } from '../types/project'
 
 const props = defineProps<{
   project: Project
@@ -129,6 +129,22 @@ function cancelTaskEdit() {
   editingTaskId.value = null
   editingTaskName.value = ''
 }
+
+function handleStatusChange(event: Event): void {
+  const target = event.target
+
+  if (!(target instanceof HTMLSelectElement)) {
+    return
+  }
+
+  const status = target.value
+
+  if (!projectStatuses.some((item) => item === status)) {
+    return
+  }
+
+  emit('status-change', props.project.id, status as ProjectStatus)
+}
 </script>
 
 <template>
@@ -191,7 +207,7 @@ function cancelTaskEdit() {
       draggable="false"
       :value="project.status"
       @click.stop
-      @change="$emit('status-change', project.id, $event.target.value)"
+      @change="handleStatusChange"
     >
       <option v-for="status in projectStatuses" :key="status" :value="status">
         {{ status }}
