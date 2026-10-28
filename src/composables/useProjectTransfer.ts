@@ -1,6 +1,7 @@
 import type { Ref } from 'vue'
 import type { Project } from '../types/project'
 import type { ToastType } from '../types/toast'
+import { isProject } from '../utils/projectValidation'
 
 export function useProjectTransfer(
   projects: Ref<Project[]>,
@@ -52,6 +53,10 @@ export function useProjectTransfer(
 
         if (!Array.isArray(importedProjects)) {
           throw new Error('Nieprawidłowy format pliku')
+        }
+
+        if (!importedProjects.every(isProject)) {
+          throw new Error('Nieprawidłowe dane projektu')
         }
 
         projects.value = importedProjects
