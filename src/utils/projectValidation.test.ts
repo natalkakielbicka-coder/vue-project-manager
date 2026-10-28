@@ -79,4 +79,35 @@ describe('isProject', () => {
 
     expect(isProject(project)).toBe(false)
   })
+
+  it('rejects null', () => {
+    expect(isProject(null)).toBe(false)
+  })
+
+  it('rejects an object without required fields', () => {
+    const project = {
+      id: 1,
+      name: 'Strona WordPress',
+    }
+
+    expect(isProject(project)).toBe(false)
+  })
+
+  it('rejects a project with invalid ID', () => {
+    const project = {
+      ...validProject,
+      id: 'abc',
+    }
+
+    expect(isProject(project)).toBe(false)
+  })
+
+  it('rejects a project with tasks that are not an array', () => {
+    const project = {
+      ...validProject,
+      tasks: 'Przygotować layout',
+    }
+
+    expect(isProject(project)).toBe(false)
+  })
 })
