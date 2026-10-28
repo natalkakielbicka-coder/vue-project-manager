@@ -44,7 +44,11 @@ export function useProjectTransfer(
 
     reader.onload = () => {
       try {
-        const importedProjects = JSON.parse(reader.result)
+        if (typeof reader.result !== 'string') {
+          throw new Error('Nieprawidłowa zawartość pliku')
+        }
+
+        const importedProjects: unknown = JSON.parse(reader.result)
 
         if (!Array.isArray(importedProjects)) {
           throw new Error('Nieprawidłowy format pliku')
@@ -57,7 +61,7 @@ export function useProjectTransfer(
         showToast('Nie udało się zaimportować danych', 'error')
       }
 
-      event.target.value = ''
+      input.value = ''
     }
 
     reader.readAsText(file)
