@@ -1,4 +1,11 @@
-export function useProjectTransfer(projects, showToast) {
+import type { Ref } from 'vue'
+import type { Project } from '../types/project'
+import type { ToastType } from '../types/toast'
+
+export function useProjectTransfer(
+  projects: Ref<Project[]>,
+  showToast: (message: string, type?: ToastType) => void,
+) {
   function exportProjects() {
     const data = JSON.stringify(projects.value, null, 2)
 
