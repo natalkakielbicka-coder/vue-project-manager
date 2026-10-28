@@ -27,8 +27,14 @@ export function useProjectTransfer(
     showToast('Dane zostały wyeksportowane', 'success')
   }
 
-  function importProjects(event) {
-    const file = event.target.files[0]
+  function importProjects(event: Event): void {
+    const input = event.target
+
+    if (!(input instanceof HTMLInputElement)) {
+      return
+    }
+
+    const file = input.files?.[0]
 
     if (!file) {
       return
