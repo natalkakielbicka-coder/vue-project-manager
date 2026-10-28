@@ -111,3 +111,37 @@ describe('isProject', () => {
     expect(isProject(project)).toBe(false)
   })
 })
+
+describe('Project import validation', () => {
+  it('accepts an array of valid projects', () => {
+    const projects = [
+      validProject,
+      {
+        ...validProject,
+        id: 2,
+        name: 'Sklep WooCommerce',
+      },
+    ]
+
+    expect(projects.every(isProject)).toBe(true)
+  })
+
+  it('rejects an array containing an invalid project', () => {
+    const projects = [
+      validProject,
+      {
+        ...validProject,
+        id: 2,
+        status: 'Nieznany',
+      },
+    ]
+
+    expect(projects.every(isProject)).toBe(false)
+  })
+
+  it('accepts an empty array', () => {
+    const projects: unknown[] = []
+
+    expect(projects.every(isProject)).toBe(true)
+  })
+})
