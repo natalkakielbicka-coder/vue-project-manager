@@ -5,7 +5,7 @@ import type { SortOption } from '../types/filters'
 
 export function useProjectDragDrop(projects: Ref<Project[]>, sortBy: Ref<SortOption>) {
   const draggedProjectId = ref<Project['id'] | null>(null)
-  const dragOverStatus = ref(null)
+  const dragOverStatus = ref<ProjectStatus | null>(null)
 
   function startDrag(projectId: Project['id']): void {
     draggedProjectId.value = projectId
@@ -62,7 +62,11 @@ export function useProjectDragDrop(projects: Ref<Project[]>, sortBy: Ref<SortOpt
     resetDragState()
   }
 
-  function dropOnProject(targetProjectId, status, position) {
+  function dropOnProject(
+    targetProjectId: Project['id'],
+    status: ProjectStatus,
+    position: 'before' | 'after',
+  ) {
     if (draggedProjectId.value === targetProjectId) {
       resetDragState()
       return
