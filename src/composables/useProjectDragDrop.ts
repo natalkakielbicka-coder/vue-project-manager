@@ -1,10 +1,13 @@
 import { ref } from 'vue'
+import type { Ref } from 'vue'
+import type { Project } from '../types/project'
+import type { SortOption } from '../types/filters'
 
-export function useProjectDragDrop(projects, sortBy) {
-  const draggedProjectId = ref(null)
+export function useProjectDragDrop(projects: Ref<Project[]>, sortBy: Ref<SortOption>) {
+  const draggedProjectId = ref<Project['id'] | null>(null)
   const dragOverStatus = ref(null)
 
-  function startDrag(projectId) {
+  function startDrag(projectId: Project['id']): void {
     draggedProjectId.value = projectId
   }
 
