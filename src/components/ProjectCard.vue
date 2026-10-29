@@ -143,7 +143,9 @@ function handleStatusChange(event: Event): void {
     return
   }
 
-  emit('status-change', props.project.id, status as ProjectStatus)
+  if (status === 'Do zrobienia' || status === 'W trakcie' || status === 'Gotowe') {
+    emit('status-change', props.project.id, status)
+  }
 }
 </script>
 
