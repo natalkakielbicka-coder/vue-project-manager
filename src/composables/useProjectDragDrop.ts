@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import type { Ref } from 'vue'
-import type { Project } from '../types/project'
+import type { Project, ProjectStatus } from '../types/project'
 import type { SortOption } from '../types/filters'
 
 export function useProjectDragDrop(projects: Ref<Project[]>, sortBy: Ref<SortOption>) {
@@ -15,7 +15,7 @@ export function useProjectDragDrop(projects: Ref<Project[]>, sortBy: Ref<SortOpt
     resetDragState()
   }
 
-  function dragOver(status) {
+  function dragOver(status: ProjectStatus): void {
     dragOverStatus.value = status
   }
 
@@ -28,7 +28,7 @@ export function useProjectDragDrop(projects: Ref<Project[]>, sortBy: Ref<SortOpt
     dragOverStatus.value = null
   }
 
-  function dropProject(status) {
+  function dropProject(status: ProjectStatus): void {
     const draggedIndex = projects.value.findIndex(
       (project) => project.id === draggedProjectId.value,
     )
