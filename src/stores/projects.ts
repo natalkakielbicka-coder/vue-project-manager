@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
+import { isProject } from '../utils/projectValidation'
 
 import type { Project, ProjectFormData, ProjectStatus, Task } from '../types/project'
 
@@ -14,7 +15,7 @@ export const useProjectsStore = defineStore('projects', () => {
     try {
       const parsed: unknown = JSON.parse(savedProjects)
 
-      return Array.isArray(parsed) ? (parsed as Project[]) : []
+      return Array.isArray(parsed) && parsed.every(isProject) ? parsed : []
     } catch {
       return []
     }
