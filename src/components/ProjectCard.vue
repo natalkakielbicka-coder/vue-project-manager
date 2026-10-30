@@ -276,7 +276,12 @@ function handleStatusChange(event: Event): void {
         Duplikuj
       </button>
 
-      <button class="delete-button" draggable="false" @click.stop="$emit('delete', project.id)">
+      <button
+        class="delete-button"
+        draggable="false"
+        @click.stop="$emit('delete', project.id)"
+        :aria-label="`Usuń projekt ${project.name}`"
+      >
         Usuń
       </button>
     </div>
