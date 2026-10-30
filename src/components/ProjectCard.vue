@@ -278,7 +278,12 @@ function handleStatusChange(event: Event): void {
         Edytuj
       </button>
 
-      <button class="duplicate-button" draggable="false" @click.stop="$emit('duplicate', project)">
+      <button
+        class="duplicate-button"
+        draggable="false"
+        @click.stop="$emit('duplicate', project)"
+        :title="`Duplikuj projekt ${project.name}`"
+      >
         Duplikuj
       </button>
 
