@@ -5,17 +5,15 @@ import type { Project, ProjectStatus } from '../types/project'
 import type { FilterStatus, SortOption } from '../types/filters'
 
 export function useProjectFilters(projects: Ref<Project[]>) {
+  const statuses: FilterStatus[] = ['Wszystkie', ...projectStatuses]
+
   const savedStatus = localStorage.getItem('selectedStatus')
 
   const selectedStatus = ref<FilterStatus>(
-    savedStatus === 'Do zrobienia' || savedStatus === 'W trakcie' || savedStatus === 'Gotowe'
-      ? savedStatus
-      : 'Wszystkie',
+    statuses.find((status) => status === savedStatus) ?? 'Wszystkie',
   )
   const searchQuery = ref<string>('')
   const sortBy = ref<SortOption>('newest')
-
-  const statuses: FilterStatus[] = ['Wszystkie', ...projectStatuses]
 
   const filteredProjects = computed(() => {
     const filtered = projects.value.filter((project) => {
@@ -60,12 +58,13 @@ export function useProjectFilters(projects: Ref<Project[]>) {
   })
 
   const statusCounts = computed(() => {
-    return {
-      Wszystkie: projects.value.length,
-      'Do zrobienia': projects.value.filter((project) => project.status === 'Do zrobienia').length,
-      'W trakcie': projects.value.filter((project) => project.status === 'W trakcie').length,
-      Gotowe: projects.value.filter((project) => project.status === 'Gotowe').length,
-    }
+    const counts = { Wszystkie: projects.value.length } as Record<FilterStatus, number>
+
+    projectStatuses.forEach((status) => {
+      counts[status] = projects.value.filter((project) => project.status === status).length
+    })
+
+    return counts
   })
 
   const hasActiveFilters = computed(() => {
