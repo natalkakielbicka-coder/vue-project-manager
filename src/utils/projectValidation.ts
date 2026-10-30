@@ -1,3 +1,5 @@
+import { projectPriorities } from '../constants/projectPriorities'
+import { projectStatuses } from '../constants/projectStatuses'
 import type { Project, Task } from '../types/project'
 
 export function isTask(value: unknown): value is Task {
@@ -35,9 +37,9 @@ export function isProject(value: unknown): value is Project {
     return false
   }
 
-  const validStatuses = ['Do zrobienia', 'W trakcie', 'Gotowe']
+  const validStatuses: readonly string[] = projectStatuses
 
-  const validPriorities = ['Niski', 'Średni', 'Wysoki', 'Pilny']
+  const validPriorities: readonly string[] = projectPriorities
 
   return (
     typeof value.id === 'number' &&
