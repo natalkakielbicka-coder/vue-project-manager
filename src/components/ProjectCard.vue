@@ -268,7 +268,13 @@ function handleStatusChange(event: Event): void {
     </div>
 
     <div class="project-actions">
-      <button class="edit-button" draggable="false" @click.stop="$emit('edit', project)">
+      <button
+        type="button"
+        class="edit-button"
+        draggable="false"
+        @click.stop="$emit('edit', project)"
+        :aria-label="`Edytuj projekt ${project.name}`"
+      >
         Edytuj
       </button>
 
