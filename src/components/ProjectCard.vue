@@ -283,6 +283,7 @@ function handleStatusChange(event: Event): void {
       </button>
 
       <button
+        type="button"
         class="delete-button"
         draggable="false"
         @click.stop="$emit('delete', project.id)"
