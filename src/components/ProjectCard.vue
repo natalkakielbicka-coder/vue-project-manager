@@ -208,6 +208,7 @@ function handleStatusChange(event: Event): void {
       class="status-select"
       draggable="false"
       :value="project.status"
+      :aria-label="`Zmień status projektu ${project.name}`"
       @click.stop
       @change="handleStatusChange"
     >
