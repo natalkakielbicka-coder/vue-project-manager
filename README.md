@@ -1,6 +1,6 @@
 # Project Manager
 
-A responsive project management application built with **Vue 3** and **Vite**.
+A responsive project management application built with **Vue 3**, **TypeScript**, **Pinia** and **Vite**.
 
 The app allows users to manage projects on a Kanban-style board, organize tasks, track deadlines and priorities, and persist data locally in the browser.
 
@@ -75,8 +75,10 @@ The app allows users to manage projects on a Kanban-style board, organize tasks,
 
 - Vue 3
 - Composition API
-- JavaScript
+- TypeScript
+- Pinia
 - Vite
+- Vitest
 - CSS
 - LocalStorage
 - HTML5 Drag & Drop API
@@ -102,6 +104,7 @@ The project uses several Vue concepts and patterns, including:
 - `Teleport`
 - `TransitionGroup`
 - composables
+- Pinia store
 
 ## Project Structure
 
@@ -114,20 +117,34 @@ src/
 │   └── ProjectForm.vue
 │
 ├── composables/
-│   ├── useProjectDragDrop.js
-│   ├── useProjectFilters.js
-│   ├── useProjectTransfer.js
-│   ├── useTheme.js
-│   └── useToasts.js
+│   ├── useProjectDragDrop.ts
+│   ├── useProjectFilters.ts
+│   ├── useProjectTransfer.ts
+│   ├── useTheme.ts
+│   └── useToasts.ts
 │
 ├── constants/
-│   └── projectStatuses.js
+│   ├── projectPriorities.ts
+│   └── projectStatuses.ts
+│
+├── stores/
+│   └── projects.ts
+│
+├── types/
+│   ├── filters.ts
+│   ├── project.ts
+│   └── toast.ts
+│
+├── utils/
+│   └── projectValidation.ts
 │
 ├── App.vue
-└── main.js
+└── main.ts
 ```
 
 ## Architecture
+
+Project data and actions live in the `projects` Pinia store (`src/stores/projects.ts`).
 
 Some application logic was extracted from `App.vue` into reusable composables:
 
@@ -143,7 +160,9 @@ This keeps the main application component smaller and separates independent piec
 
 Projects are stored in the browser using `localStorage`.
 
-Changes are automatically persisted using Vue's `watch`.
+Changes are automatically persisted using Vue's `watch` inside the Pinia store.
+
+Data loaded from `localStorage` or imported from a JSON file is validated before it is used.
 
 The application also supports exporting the current project list to a JSON file and restoring it later through JSON import.
 
@@ -186,6 +205,28 @@ To preview the production build locally:
 ```bash
 npm run preview
 ```
+
+## Code quality
+
+Run the tests:
+
+```bash
+npm test
+```
+
+Check types:
+
+```bash
+npm run type-check
+```
+
+Run the linter:
+
+```bash
+npm run lint
+```
+
+The same checks run in GitHub Actions before every deployment to GitHub Pages.
 
 ## About the project
 
