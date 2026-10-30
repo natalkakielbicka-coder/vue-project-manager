@@ -30,6 +30,7 @@ const {
   duplicateProject,
   changeProjectStatus,
   deleteProject: deleteProjectFromStore,
+  toggleTask: toggleTaskInStore,
   editTask: editTaskFromStore,
   deleteTask: deleteTaskFromStore,
 } = projectsStore
@@ -102,25 +103,18 @@ function cancelEdit() {
 }
 
 function toggleTask(projectId: Project['id'], taskId: Task['id']): void {
+  toggleTaskInStore(projectId, taskId)
+
   const project = projects.value.find((project) => project.id === projectId)
 
   if (!project) {
     return
   }
 
-  const task = project.tasks?.find((task) => task.id === taskId)
-
-  if (!task) {
-    return
-  }
-
-  task.completed = !task.completed
-  project.updatedAt = new Date().toISOString()
-
   const allTasksCompleted =
     project.tasks.length > 0 && project.tasks.every((task) => task.completed)
 
-  if (task.completed && allTasksCompleted && project.status !== 'Gotowe') {
+  if (allTasksCompleted && project.status !== 'Gotowe') {
     projectToCompleteId.value = project.id
   }
 }
